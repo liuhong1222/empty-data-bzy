@@ -1,0 +1,54 @@
+html,body,#app {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+body {
+  color: #848a9f;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,"\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;
+  background-color: #f8f9fb;
+  font-size: 12px;
+}
+
+/* 表格样式 */
+.el-table .el-table__header thead tr th {
+	background-color: #FAFAFA;
+}
+.el-table thead {
+	color: rgba(0, 0, 0, 0.85) !important;
+}
+.el-table th>.cell {
+	font-weight: 400;
+}
+
+.el-pagination {
+  margin-top: 25px;
+}
+
+/* 弹框样式 */
+.user_dialog .el-dialog__body {
+	padding: 20px;
+}
+.el-dialog__header {
+	border-bottom: 1px solid #E8E8E8;
+}
+.el-dialog__footer {
+  border-top: 1px solid #E8E8E8;
+  padding: 10px 20px !important;
+}
+.el-date-editor .el-range__close-icon {
+  line-height: 28px;
+}
+.el-tabs--border-card > .el-tabs__header .el-tabs__item {
+  font-weight: 700;
+}
+
+._button {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+}
