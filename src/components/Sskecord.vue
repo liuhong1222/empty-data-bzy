@@ -2,11 +2,11 @@
   <div>
     <el-card>
       <el-row>
-        <el-col :span="24" >
+        <el-col :span="24">
           <div class="number-title">
             <div class="i-title">
-              <img src="../assets/img/ssjl.png">
-              <div class="title">实时检测充值记录</div>
+              <img src="../assets/img/ssjl.png" />
+              <div class="title">实时查询充值记录</div>
             </div>
           </div>
           <el-col class="addBtnBox">
@@ -22,40 +22,72 @@
                 class="picker"
               >
               </el-date-picker>
-              <el-button type="primary" size="small" @click="getPageList" class="button">查询</el-button>
+              <el-button
+                type="primary"
+                size="small"
+                @click="getPageList"
+                class="button"
+                >查询</el-button
+              >
             </el-col>
           </el-col>
-          <el-table :data="tableData" style="width: 100%;margin-bottom:12px;" border>
+          <el-table
+            :data="tableData"
+            style="width: 100%; margin-bottom: 12px"
+            border
+          >
             <el-table-column prop="orderNo" label=" 订单编号"></el-table-column>
-            <el-table-column prop="goodsName" label="套餐名称"></el-table-column>
+            <el-table-column
+              prop="goodsName"
+              label="套餐名称"
+            ></el-table-column>
             <el-table-column prop="price" label="单价（元）"></el-table-column>
             <el-table-column prop="payType" label="充值类型">
               <template slot-scope="scope">
                 {{
-                  scope.row.payType == '0' ? '对公转账' : scope.row.payType == '1' ? '支付宝扫码付'
-                  : scope.row.payType == '2' ? '注册赠送' : scope.row.payType == '3' ? '赠送' : scope.row.payType == '4' ? '对公支付宝转账'
-                  : scope.row.payType == '5' ? '对私支付宝' : scope.row.payType == '6' ? '对私微信' : '对私转账'
+                  scope.row.payType == '0'
+                    ? '对公转账'
+                    : scope.row.payType == '1'
+                    ? '支付宝扫码付'
+                    : scope.row.payType == '2'
+                    ? '注册赠送'
+                    : scope.row.payType == '3'
+                    ? '赠送'
+                    : scope.row.payType == '4'
+                    ? '对公支付宝转账'
+                    : scope.row.payType == '5'
+                    ? '对私支付宝'
+                    : scope.row.payType == '6'
+                    ? '对私微信'
+                    : '对私转账'
                 }}
               </template>
             </el-table-column>
-            <el-table-column prop="paymentAmount" label="充值金额（元）"></el-table-column>
-            <el-table-column prop="rechargeNumber" label="充值条数"></el-table-column>
-            <el-table-column prop="createTime" label="充值时间"></el-table-column>
+            <el-table-column
+              prop="paymentAmount"
+              label="充值金额（元）"
+            ></el-table-column>
+            <el-table-column
+              prop="rechargeNumber"
+              label="充值条数"
+            ></el-table-column>
+            <el-table-column
+              prop="createTime"
+              label="充值时间"
+            ></el-table-column>
           </el-table>
           <!-- 分页区域 -->
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="queryInfo.current"
+            :current-page="queryInfo.page"
             :page-sizes="[10, 15, 20, 25, 30]"
             :page-size="queryInfo.size"
             layout="prev, pager, next, sizes, jumper"
             :total="total"
           ></el-pagination>
         </el-col>
-        <el-col>
-
-        </el-col>
+        <el-col> </el-col>
       </el-row>
     </el-card>
   </div>
@@ -72,7 +104,7 @@ export default {
       total: 0,
       queryInfo: {
         // keyword: '',
-        current: 1,
+        page: 1,
         size: 10,
         customerId: '',
         createTimeFrom: '',
@@ -85,7 +117,7 @@ export default {
       const { data } = await this.$http.get('front/personal/personalInfo')
       if (data.code !== 200) return this.$message.error(data.msg)
       this.personalInfo = data.data
-      console.log(this.personalInfo)
+      // console.log(this.personalInfo)
       this.queryInfo.customerId = this.personalInfo.id
     },
     async getPageList() {
@@ -95,10 +127,14 @@ export default {
       } else {
         this.queryInfo.createTimeFrom = this.queryInfo.createTimeEnd = ''
       }
-      const { data } = await this.$http.post('front/recharge/getRealtimePageList', this.queryInfo)
+      this.queryInfo.category = 1
+      const { data } = await this.$http.post(
+        'front/recharge/getPageList',
+        this.queryInfo
+      )
       if (data.code !== 200) return this.$message.error(data.msg)
-      console.log(data)
-      this.tableData = data.data.records
+      // console.log(data)
+      this.tableData = data.data.list
       this.total = parseInt(data.data.total)
     },
     handleSizeChange(newSize) {
@@ -106,7 +142,7 @@ export default {
       this.getPageList()
     },
     handleCurrentChange(newCurrent) {
-      this.queryInfo.current = newCurrent
+      this.queryInfo.page = newCurrent
       this.getPageList()
     }
   },
@@ -133,7 +169,7 @@ export default {
       align-items: center;
       margin-bottom: 23px;
       height: 28px;
-      line-height: 28PX;
+      line-height: 28px;
       img {
         margin-right: 10px;
         width: 28px;
@@ -142,7 +178,7 @@ export default {
       }
       .title {
         font-size: 16px;
-        color: #7f859f
+        color: #7f859f;
       }
     }
   }

@@ -37,7 +37,7 @@
                       </div>
                       <div>
                         <span class="l_span">营业期限</span>
-                        <span class="r_span">{{personalInfo.customerExt.businessLicenseExpireStartTime}} ———— {{personalInfo.customerExt.businessLicenseExpireEndTime}}</span>
+                        <span class="r_span">{{personalInfo.customerExt.businessLicenseExpireStartTime}} —— {{personalInfo.customerExt.businessLicenseExpireEndTime}}</span>
                       </div>
                       <div>
                         <span class="l_span">经营范围</span>
@@ -81,7 +81,18 @@
                 </div>
 
                 <div class="rengong" v-if="personalInfo.state == 0">
-                  <el-col :span="10">
+                  <!-- customerType有值：待审核 -->
+                  <el-col :span="18" v-if="personalInfo.customerType === 0 || personalInfo.customerType === 1">
+                    <div class="box">
+                      <p class="complete">
+                        <img src="../assets/img/提交完成.png" alt="提交成功">
+                        <span>您已成功提交认证信息</span>
+                      </p>
+                      <p class="tip">请稍后，等待工作人员审核，如需加急请联系客服。</p>
+                    </div>
+                  </el-col>
+                  <!-- 否则：未认证 -->
+                  <el-col :span="10" v-else>
                     <div>
                       <span class="l_span">认证信息</span>
                       <span class="r_span red">
@@ -91,6 +102,13 @@
                     </div>
                     <div><el-button class="button" size="small" plain icon="iconfont icondunpai-" @click="goAttestation"> 立即认证</el-button></div>
                   </el-col>
+                </div>
+
+                <div class="rengong" v-if="personalInfo.state == 1">
+                  <div class="reject-wrap">
+                    <p>认证已驳回，请重新编辑提交！</p>
+                    <el-button type="primary" size="small" @click="toAttestation">确定</el-button>
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -103,6 +121,7 @@
       <img width="100%" :src="dialogImageUrl">
       <img :src="dialogImageUrl2" height="50%" v-if="personalInfo.customerType == 0">
     </el-dialog>
+
   </div>
 </template>
 
@@ -129,15 +148,25 @@ export default {
       const { data } = await this.$http.get(`/front/personal/info/${id}`)
       if (data.code !== 200) return this.$message.error(data.msg)
       this.AttestationForm = data.data
+      if (this.personalInfo.state === 1) { // 已驳回
+        // if (data.data.businessLicenseNumber) { // 企业
+        //   this.isCompany = true
+        // } else {
+        //   this.isPerson = true
+        // }
+      }
+    },
+    toAttestation () {
+      this.$router.push('/attestation')
     },
     viewOriginal() {
       this.dialogVisible = true
-      this.dialogImageUrl = this.AttestationForm.businessLicensePath
+      this.dialogImageUrl = this.downloadDomain + this.AttestationForm.businessLicensePath
     },
     viewIdentity() {
       this.dialogVisible = true
-      this.dialogImageUrl = this.AttestationForm.idCardFrontPath
-      this.dialogImageUrl2 = this.AttestationForm.idCardBackPath
+      this.dialogImageUrl = this.downloadDomain + this.AttestationForm.idCardFrontPath
+      this.dialogImageUrl2 = this.downloadDomain + this.AttestationForm.idCardBackPath
     },
     goAttestation() {
       this.$router.push('/attestation')
@@ -225,6 +254,47 @@ export default {
     .div {
       margin-top: -10px;
     }
+    .reject-wrap {
+      p {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+.el-col-18 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    .box {
+      width: 550px;
+      height: 270px;
+      border-radius: 5px;
+      background-color: #eef0f3;
+      padding: 50px;
+      box-sizing: border-box;
+      .complete {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          width: 80px;
+        }
+        span {
+          font-size: 16px;
+          margin-left: 15px;
+        }
+      }
+      .tip {
+        width: 100%;
+        text-align: center;
+        margin-top: 30px;
+      }
+    }
+  }
+.dialog-haveReject {
+  .el-dialog__body {
+    text-align: center;
   }
 }
 </style>

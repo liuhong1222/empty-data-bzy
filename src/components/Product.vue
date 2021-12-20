@@ -1,56 +1,80 @@
 <template>
   <div>
+    <el-row :span="24">
+      <div class="product-title">
+        <div class="i-title">
+          <img src="../assets/img/guanli-pro.png" />
+          <div class="title">产品介绍</div>
+        </div>
+      </div>
+    </el-row>
     <el-card>
       <el-row>
-        <el-col :span="24" >
+        <!-- <el-col :span="24" >
           <div class="product-title">
             <div class="i-title">
               <img src="../assets/img/guanli-pro.png">
-              <div class="title">产品管理</div>
+              <div class="title">产品介绍</div>
             </div>
           </div>
-        </el-col>
-        <el-row :span="24" style="margin: 20px 0;">
+        </el-col> -->
+        <el-row :span="24" style="margin: 20px 0">
           <el-col :span="12">
             <div class="product">
               <div class="left-block">
-                <img src="../assets/img/空号检测.png" alt="空号检测">
+                <img src="../assets/img/空号检测.png" alt="空号检测" />
                 <div class="left-block-p" @click="$router.push('/emptynumber')">
                   <div class="p-title">空号检测</div>
-                  <div class="des">根据客户提供的手机号，分类筛选出其中的空号、实号、风险号和沉默号。多用于一般营销。（仅支持批量检测）</div>
+                  <div class="des">
+                    根据客户提供的手机号，分类筛选出其中的空号、实号、风险号和沉默号。多用于一般营销。（仅支持批量检测）
+                  </div>
                 </div>
               </div>
               <div class="right-block">
                 <div class="right-block-p">
                   <span class="money">
-                  0.001元/条~0.002 元/条
-<!--                  <span class="product-listunit">元/条</span>-->
+                    <!-- 0.001元/条~0.002 元/条 -->
+                    <!--                  <span class="product-listunit">元/条</span>-->
                   </span>
                 </div>
                 <div class="btn-wrap button">
-                  <el-button icon="el-icon-right" size="small" plain @click="$router.push('/emptynumber')">立即检测</el-button>
+                  <el-button
+                    icon="el-icon-right"
+                    size="small"
+                    plain
+                    @click="$router.push('/emptynumber')"
+                    >立即检测</el-button
+                  >
                 </div>
               </div>
             </div>
           </el-col>
           <el-col :span="12">
-            <div class="product" style="margin-right:0">
+            <div class="product" style="margin-right: 0">
               <div class="left-block">
-                <img src="../assets/img/实时显示.png" alt="号码实时查询">
+                <img src="../assets/img/实时显示.png" alt="号码实时查询" />
                 <div class="left-block-p" @click="$router.push('/realtime')">
-                  <div class="p-title">号码实时检测</div>
-                  <div class="des">实时检测手机号码状态，包括空号、正常、忙、关机、停机，是否有语音功能、短信功能，用于检测上网卡、非正常卡。（可单条查询）</div>
+                  <div class="p-title">号码实时查询</div>
+                  <div class="des">
+                    实时查询手机号码状态，包括空号、正常、忙、关机、停机，是否有语音功能、短信功能，用于检测上网卡、非正常卡。（可单条查询）
+                  </div>
                 </div>
               </div>
               <div class="right-block">
                 <div class="right-block-p">
                   <span class="money">
-                  0.05元/条~0.07元/条
-<!--                  <span class="product-listunit">元/条</span>-->
+                    <!-- 0.05元/条~0.07元/条 -->
+                    <!--                  <span class="product-listunit">元/条</span>-->
                   </span>
                 </div>
                 <div class="btn-wrap button">
-                  <el-button icon="el-icon-right" size="small" plain @click="$router.push('/realtime')">立即检测</el-button>
+                  <el-button
+                    icon="el-icon-right"
+                    size="small"
+                    plain
+                    @click="$router.push('/realtime')"
+                    >立即检测</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -60,40 +84,66 @@
           <el-col :span="12">
             <div class="product">
               <div class="left-block">
-                <img src="https://static.253.com/wanshu/02/2019-05-07/164805_bceef520.png" alt="">
-                <div class="left-block-p" @click="Alart">
+                <img
+                  src="https://static.253.com/wanshu/02/2019-05-07/164805_bceef520.png"
+                  alt=""
+                />
+                <div class="left-block-p" @click="Alart('/emptyrealapi', 1)">
                   <div class="p-title">空号检测API</div>
-                  <div class="des">用户侧营销系统可调用空号检测API直接实现号码检测功能，无需登录检测平台提交号码检测</div>
+                  <div class="des">
+                    用户侧营销系统可调用空号检测API直接实现号码检测功能，无需登录检测平台提交号码检测
+                  </div>
                 </div>
               </div>
               <div class="right-block">
                 <div class="right-block-p">
                   <span class="money">
-                  0.001元/条~0.002 元/条
-<!--                  <span class="product-listunit">元/条</span>-->
+                    <!-- 0.001元/条~0.002 元/条 -->
+                    <!--                  <span class="product-listunit">元/条</span>-->
                   </span>
                 </div>
-                <div class="btn-wrap button"><el-button icon="el-icon-right" size="small" plain @click="Alart">查看详情</el-button></div>
+                <div class="btn-wrap button">
+                  <el-button
+                    icon="el-icon-right"
+                    size="small"
+                    plain
+                    @click="Alart('/emptyrealapi', 1)"
+                    >查看详情</el-button
+                  >
+                </div>
               </div>
             </div>
           </el-col>
           <el-col :span="12">
-            <div class="product" style="margin-right:0">
+            <div class="product" style="margin-right: 0">
               <div class="left-block">
-                <img src="https://static.253.com/wanshu/02/2019-05-07/164805_bceef520.png" alt="">
-                <div class="left-block-p" @click="Alart">
-                  <div class="p-title">号码实时检测API</div>
-                  <div class="des">基于运营商接口的手机号码状态查询接口，精准检测出号码的在网状态，实时反馈出检测结果</div>
+                <img
+                  src="https://static.253.com/wanshu/02/2019-05-07/164805_bceef520.png"
+                  alt=""
+                />
+                <div class="left-block-p" @click="Alart('/emptyrealapi', 2)">
+                  <div class="p-title">号码实时查询API</div>
+                  <div class="des">
+                    基于运营商接口的手机号码状态查询接口，精准检测出号码的在网状态，实时反馈出检测结果
+                  </div>
                 </div>
               </div>
               <div class="right-block">
                 <div class="right-block-p">
                   <span class="money">
-                  0.05元/条~0.07元/条
-<!--                  <span class="product-listunit">元/条</span>-->
+                    <!-- 0.05元/条~0.07元/条 -->
+                    <!--                  <span class="product-listunit">元/条</span>-->
                   </span>
                 </div>
-                <div class="btn-wrap button"><el-button icon="el-icon-right" size="small" plain @click="Alart">查看详情</el-button></div>
+                <div class="btn-wrap button">
+                  <el-button
+                    icon="el-icon-right"
+                    size="small"
+                    plain
+                    @click="Alart('/emptyrealapi', 2)"
+                    >查看详情</el-button
+                  >
+                </div>
               </div>
             </div>
           </el-col>
@@ -123,10 +173,16 @@ export default {
     }
   },
   methods: {
-    Alart() {
-      this.$alert('详询客户经理', '提示', {
-        confirmButtonText: '确定',
-        type: 'info'
+    Alart(path, id) {
+      // this.$alert('详询客户经理', '提示', {
+      //   confirmButtonText: '确定',
+      //   type: 'info'
+      // })
+      // this.$router.push(path)
+      this.$router.push({
+        path: path,
+        name: 'Emptyrealapi',
+        params: { id: id }
       })
     }
   }
@@ -134,6 +190,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.product-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  .i-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 23px;
+    height: 28px;
+    img {
+      margin-right: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+    .title {
+      font-size: 16px;
+      color: #7f859f;
+    }
+  }
+}
 .el-card {
   .product-title {
     display: flex;
@@ -148,7 +229,7 @@ export default {
       align-items: center;
       margin-bottom: 23px;
       height: 28px;
-      line-height: 28PX;
+      line-height: 28px;
       img {
         margin-right: 10px;
         width: 28px;
@@ -157,7 +238,7 @@ export default {
       }
       .title {
         font-size: 16px;
-        color: #7f859f
+        color: #7f859f;
       }
     }
   }

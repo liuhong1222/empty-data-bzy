@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <router-view />
-    <el-dialog :visible.sync="dialogVisible" title="空号检测服务协议" :close-on-click-modal="false" class="agreement">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      title="空号检测服务协议"
+      :close-on-click-modal="false"
+      class="agreement"
+    >
       <div class="dialog">
         <div class="details-content" v-html="content">
           <!-- <p style="text-align: center" class="MsoNormal" align="center">
@@ -155,51 +160,95 @@
             5.3 用户对服务之任何部分或本服务条款的任何部分之意见及建议可通过公司电话与云信通联系，云信通保留本服务条款之解释权。
           </p> -->
         </div>
-        <div style="font-weight: 700;margin: 15px 0;">
+        <div style="font-weight: 700; margin: 15px 0">
           <el-checkbox v-model="checked"></el-checkbox>
-          <span style="margin-left:5px;">我已阅读并同意该协议</span>
+          <span style="margin-left: 5px">我已阅读并同意该协议</span>
         </div>
-        <div slot="footer" style="width: 100%;text-align: center;">
-          <el-button type="primary" :disabled="!checked" @click="dialogVisible = false">确 定</el-button>
+        <div slot="footer" style="width: 100%; text-align: center">
+          <el-button
+            type="primary"
+            :disabled="!checked"
+            @click="dialogVisible = false"
+            >确 定</el-button
+          >
         </div>
       </div>
     </el-dialog>
+    <certification />
   </div>
 </template>
 
 <script>
+import certification from './components/certification'
 export default {
+  components: {
+    certification
+  },
   data() {
     return {
       checked: true,
       dialogVisible: false,
-      content: ''
+      content: '',
+      isFirst: false
     }
   },
   methods: {
     async getLogo() {
+      // debugger
       const { data } = await this.$http.get('front/siteInfo')
       this.content = data.data.agreement
+      // console.log(this.content)
+      // console.log(this.isFirst)
+      // if (!this.content) {
+      //   this.dialogVisible = false
+      // }
       // 代理商网站设置
-      document.title = data.data.siteName
-      document.querySelector('meta[name="keywords"]').setAttribute('content', data.data.seoKeywords)
-      document.querySelector('meta[name="description"]').setAttribute('content', data.data.seoDescription)
+      document.title = data.data.siteName || ''
+      document
+        .querySelector('meta[name="keywords"]')
+        .setAttribute('content', data.data.seoKeywords)
+      document
+        .querySelector('meta[name="description"]')
+        .setAttribute('content', data.data.seoDescription)
       // icon
-      let link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+      let link =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement('link')
       link.type = 'image/x-icon'
       link.rel = 'shortcut icon'
-      link.href = data.data.agentIcon
+      link.href = this.downloadDomain + data.data.agentIcon
       document.getElementsByTagName('head')[0].appendChild(link)
+
+      // debugger
+      if (data.data?.la51Src) {
+        const srcList = data.data?.la51Src.split(',')
+        srcList.map((src) => this.loadJS(src))
+      }
+      if (data.data?.baiduSrc) {
+        window._hmt = window._hmt || []
+        this.loadJS(data.data?.baiduSrc)
+      }
+    },
+    loadJS(src) {
+      var hm = document.createElement('script')
+      hm.src = src
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(hm, s)
     }
   },
-  mounted() {
+  created() {
     this.getLogo()
   },
   watch: {
     $route: {
       handler: function (route, oldRoute) {
+        // debugger
         if (oldRoute !== undefined && oldRoute.path === '/login') {
-          this.dialogVisible = true
+          // console.log(this.content)
+          if (this.content) {
+            this.dialogVisible = true
+          }
+          // this.isFirst = true
         }
       },
       immediate: true
@@ -215,7 +264,7 @@ export default {
 .agreement .el-dialog__body {
   padding: 18px;
 }
-.details-content{
+.details-content {
   max-height: 400px;
   overflow-y: auto;
 }

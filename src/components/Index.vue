@@ -45,12 +45,12 @@
                 </el-col>
                 <el-col :span="7">
                   <div class="box">
-                    <p class="khjc">实时检测</p>
+                    <p class="khjc">实时查询</p>
                     <p class="dqye">
                       当前余额<span style="color:#649eff;">（ 条 ）</span>
                     </p>
                     <p class="yvan">{{personalInfo.realtimeBalance}}</p>
-                    <el-button type="danger" size="small" icon="iconfont iconchongzhi" class="button" @click="goRecharge('实时检测')"> 充值</el-button>
+                    <el-button type="danger" size="small" icon="iconfont iconchongzhi" class="button" @click="goRecharge('实时查询')"> 充值</el-button>
                   </div>
                 </el-col>
               </el-col>
@@ -102,6 +102,10 @@
     </el-row>
 
     <el-row style="margin-top: 20px;">
+      <product/>
+    </el-row>
+
+    <!-- <el-row style="margin-top: 20px;">
       <el-card class="four_card personalInfo">
         <div class="title">已激活产品</div>
         <el-col :span="12">
@@ -117,7 +121,6 @@
               <div class="right-block-p">
                 <span class="money">
                 0.001元/条~0.002 元/条
-<!--                <span class="product-listunit">元/条</span>-->
                 </span>
               </div>
               <div class="btn-wrap button">
@@ -131,15 +134,14 @@
             <div class="left-block">
               <img src="../assets/img/实时显示.png" alt="号码实时查询">
               <div class="left-block-p" @click="$router.push('/realtime')">
-                <div class="p-title">号码实时检测</div>
-                <div class="des">实时检测手机号码状态，包括空号、正常、忙、关机、停机，是否有语音功能、短信功能，用于检测上网卡、非正常卡。（可单条查询）</div>
+                <div class="p-title">号码实时查询</div>
+                <div class="des">实时查询手机号码状态，包括空号、正常、忙、关机、停机，是否有语音功能、短信功能，用于检测上网卡、非正常卡。（可单条查询）</div>
               </div>
             </div>
             <div class="right-block">
               <div class="right-block-p">
                 <span class="money">
                 0.05元/条~0.07元/条
-<!--                <span class="product-listunit">元/条</span>-->
                 </span>
               </div>
               <div class="btn-wrap button">
@@ -149,9 +151,9 @@
           </div>
         </el-col>
       </el-card>
-    </el-row>
+    </el-row> -->
 
-    <el-row style="margin-top: 20px;">
+    <!-- <el-row style="margin-top: 20px;">
       <el-card class="three_card personalInfo">
         <div class="title">使用统计</div>
         <el-col :span="24" style="margin:15px 0;">
@@ -221,7 +223,7 @@
           </el-col>
         </el-col>
       </el-card>
-    </el-row>
+    </el-row> -->
 
     <el-dialog title="二维码" width="25%" :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl">
@@ -232,7 +234,9 @@
 <script>
 import { ls, ss } from '../utils/storage'
 import QRCode from 'qrcodejs2'
+import product from './Product.vue'
 export default {
+  components: { product },
   data() {
     return {
       personalInfo: {}, // 账户信息数据
@@ -291,7 +295,7 @@ export default {
   },
   mounted() {
     this.getData()
-    this.getStatisticalData()
+    // this.getStatisticalData()
     this.getContractInfo()
   }
 }

@@ -6,7 +6,7 @@
         <span class="el-icon-back icon" @click="$router.go(-1)"></span>
       </div>
       <div class="crumbs">
-        <div class="crumb" @click="gotype">{{type}}</div>
+        <div class="crumb" @click="gotype">{{ type }}</div>
         <div class="crumb active">充值</div>
       </div>
     </div>
@@ -23,33 +23,56 @@
         </el-col>
       </el-row> -->
       <el-tab-pane label="自动充值">
-        <el-row style="margin: 5px 15px;">
-          <span style="font-size: 14px; font-weight: 700;">选择套餐扫码充值</span>
+        <el-row style="margin: 5px 15px">
+          <span style="font-size: 14px; font-weight: 700"
+            >选择套餐扫码充值</span
+          >
         </el-row>
         <el-row :span="24">
           <el-col :span="14" :offset="1">
             <el-col :span="8" v-for="(item, i) in goodlist" :key="item.id">
-              <div class="chongzhi" :class="{'active': active===i }" @click="activeCut(item, i)">
-                <h3 class="q-title" :class="{'active': active===i }">{{item.name}}</h3>
+              <div
+                class="chongzhi"
+                :class="{ active: active === i }"
+                @click="activeCut(item, i)"
+              >
+                <h3 class="q-title" :class="{ active: active === i }">
+                  {{ item.name }}
+                </h3>
                 <p class="qian">
                   <span class="dao">￥</span>
-                  <span class="number">{{item.price}}</span>
-                  <span class="tiao"> / {{item.specifications/10000}}万条</span>
+                  <span class="number">{{ item.price }}</span>
+                  <span class="tiao">
+                    / {{ item.specifications / 10000 }}万条</span
+                  >
                 </p>
-                <p v-if="type ==='实时检测'" class="di">{{item.remark}} <del style="display: block;">￥{{item.specifications*0.1}}</del></p>
-                <p v-else class="di">{{item.remark}} <del style="display: block;">￥{{item.specifications*0.002}}</del></p>
-                <span class="choose" v-show="i===active"></span>
+                <p v-if="type === '实时查询'" class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
+                    >￥{{ item.specifications * 0.1 }}</del
+                  >
+                </p>
+                <p v-else class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
+                    >￥{{ item.specifications * 0.002 }}</del
+                  >
+                </p>
+                <span class="choose" v-show="i === active"></span>
               </div>
             </el-col>
           </el-col>
           <el-col :span="7" :offset="2">
             <div class="dialog">
-              <p>应付金额：<span class="number">{{payAmount}}</span>元</p>
+              <p>
+                应付金额：<span class="number">{{ payAmount }}</span
+                >元
+              </p>
               <p ref="qrCodeUrl" class="qrcode"></p>
               <p class="aliPay">打开<span>支付宝</span>扫一扫即可付款</p>
               <p class="d-footer">
                 如需其他充值方式，或充值过程中遇到任何问题，请与
-                <label style="color: rgb(41, 131, 248);">客服人员联系</label>
+                <label style="color: rgb(41, 131, 248)">客服人员联系</label>
               </p>
             </div>
           </el-col>
@@ -58,9 +81,17 @@
           <el-col :span="24" class="z-container">
             <el-col :span="24" class="zdy">自定义充值</el-col>
             <el-col :span="24" :offset="1">
-              <el-input placeholder="请输入充值金额（元）" clearable v-model="zdy.price"></el-input>
-              <el-button type="primary" @click="zdyRecharge" class="button">确认</el-button>
-              <span class="tip" v-if="custom">{{ `（${custom.unitPrice}元/条，最低充值${custom.minPayAmount}元，必须为整数）` }}</span>
+              <el-input
+                placeholder="请输入充值金额（元）"
+                clearable
+                v-model="zdy.price"
+              ></el-input>
+              <el-button type="primary" @click="zdyRecharge" class="button"
+                >确认</el-button
+              >
+              <span class="tip" v-if="custom">{{
+                `（${custom.unitPrice}元/条，最低充值${custom.minPayAmount}元，必须为整数）`
+              }}</span>
             </el-col>
           </el-col>
         </el-row>
@@ -75,20 +106,36 @@
                 <el-col :span="7">
                   <p>
                     <span class="l_span">联系人： </span>
-                    <span class="r_span">请联系您的专属对接人 - {{contract.kefuNickname}}</span>
+                    <span class="r_span"
+                      >请联系您的专属对接人 - {{ contract.kefuNickname }}</span
+                    >
                   </p>
                   <p>
                     <span class="l_span">企业 QQ ：</span>
-                    <span class="r_span">{{contract.qq}} <el-button size="small" plain icon="iconfont iconqq" @click="goToQQ(contract.qq)" class="button"> QQ交谈</el-button></span>
+                    <span class="r_span"
+                      >{{ contract.qq }}
+                      <el-button
+                        size="small"
+                        plain
+                        icon="iconfont iconqq"
+                        @click="goToQQ(contract.qq)"
+                        class="button"
+                      >
+                        QQ交谈</el-button
+                      ></span
+                    >
                   </p>
                   <p>
                     <span class="l_span">联系号码：</span>
-                    <span class="r_span">{{contract.hotline}}</span>
+                    <span class="r_span">{{ contract.hotline }}</span>
                   </p>
                 </el-col>
                 <el-col :span="2">
                   <p>微信二维码</p>
-                  <img :src="contract.wechatQrcode" alt="微信二维码">
+                  <img
+                    :src="downloadDomain + contract.wechatQrcode"
+                    alt="微信二维码"
+                  />
                 </el-col>
               </el-row>
             </div>
@@ -96,7 +143,9 @@
               <p class="title">打款方式</p>
               <el-row>
                 <div class="radio">
-                  <span class="l_span" style="margin-right: 20px;">选择方式：</span>
+                  <span class="l_span" style="margin-right: 20px"
+                    >选择方式：</span
+                  >
                   <span class="r_span">
                     <el-radio v-model="radio" label="1">对公银行收款</el-radio>
                     <el-radio v-model="radio" label="2">对私银行收款</el-radio>
@@ -108,15 +157,31 @@
                   <p>
                     <span class="l_span">收款银行：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payBankPublic}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payBankPublic" @click="copy('#dg-copy1')" id="dg-copy1" class="button">复制</el-button>
+                      <span>{{ paymentWay.payBankPublic }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payBankPublic"
+                        @click="copy('#dg-copy1')"
+                        id="dg-copy1"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                   <p>
                     <span class="l_span">收款人： </span>
                     <span class="r_span">
-                      <span>{{paymentWay.payeePublic}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payeePublic" @click="copy('#dg-copy2')" id="dg-copy2" class="button">复制</el-button>
+                      <span>{{ paymentWay.payeePublic }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payeePublic"
+                        @click="copy('#dg-copy2')"
+                        id="dg-copy2"
+                        class="button"
+                        >复制</el-button
+                      >
                       <el-button
                         size="small"
                         class="button"
@@ -132,8 +197,16 @@
                   <p>
                     <span class="l_span">收款账号：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payAccountPublic}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payAccountPublic" @click="copy('#dg-copy3')" id="dg-copy3" class="button">复制</el-button>
+                      <span>{{ paymentWay.payAccountPublic }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payAccountPublic"
+                        @click="copy('#dg-copy3')"
+                        id="dg-copy3"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                 </div>
@@ -141,15 +214,31 @@
                   <p>
                     <span class="l_span">收款银行：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payBankPrivate}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payBankPrivate" @click="copy('#ds-copy1')" id="ds-copy1" class="button">复制</el-button>
+                      <span>{{ paymentWay.payBankPrivate }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payBankPrivate"
+                        @click="copy('#ds-copy1')"
+                        id="ds-copy1"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                   <p>
                     <span class="l_span">收款人： </span>
                     <span class="r_span">
-                      <span>{{paymentWay.payeePrivate}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payeePrivate" @click="copy('#ds-copy2')" id="ds-copy2" class="button">复制</el-button>
+                      <span>{{ paymentWay.payeePrivate }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payeePrivate"
+                        @click="copy('#ds-copy2')"
+                        id="ds-copy2"
+                        class="button"
+                        >复制</el-button
+                      >
                       <el-button
                         size="small"
                         class="button"
@@ -165,8 +254,16 @@
                   <p>
                     <span class="l_span">收款账号：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payAccountPrivate}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payAccountPrivate" @click="copy('#ds-copy3')" id="ds-copy3" class="button">复制</el-button>
+                      <span>{{ paymentWay.payAccountPrivate }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payAccountPrivate"
+                        @click="copy('#ds-copy3')"
+                        id="ds-copy3"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                 </div>
@@ -174,22 +271,41 @@
                   <p>
                     <span class="l_span">收款人： </span>
                     <span class="r_span">
-                      <span>{{paymentWay.payeeWechat}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payeeWechat" @click="copy('#wx-copy1')" id="wx-copy1" class="button">复制</el-button>
+                      <span>{{ paymentWay.payeeWechat }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payeeWechat"
+                        @click="copy('#wx-copy1')"
+                        id="wx-copy1"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
-                  <p style="margin-bottom: 30px;">
+                  <p style="margin-bottom: 30px">
                     <span class="l_span">收款账户：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payAccountWechat}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payAccountWechat" @click="copy('#wx-copy2')" id="wx-copy2" class="button">复制</el-button>
+                      <span>{{ paymentWay.payAccountWechat }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payAccountWechat"
+                        @click="copy('#wx-copy2')"
+                        id="wx-copy2"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                   <p class="ewm">
                     <span class="l_span">收款码：</span>
                     <span class="r_span">
                       <!-- <span ref="wxEwm"></span> -->
-                      <img :src="paymentWay.payQrcodeWechat" alt="微信二维码">
+                      <img
+                        :src="downloadDomain + paymentWay.payQrcodeWechat"
+                        alt="微信二维码"
+                      />
                     </span>
                   </p>
                 </div>
@@ -197,22 +313,41 @@
                   <p>
                     <span class="l_span">收款人： </span>
                     <span class="r_span">
-                      <span>{{paymentWay.payeeAlipay}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payeeAlipay" @click="copy('#zfb-copy1')" id="zfb-copy1" class="button">复制</el-button>
+                      <span>{{ paymentWay.payeeAlipay }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payeeAlipay"
+                        @click="copy('#zfb-copy1')"
+                        id="zfb-copy1"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
-                  <p style="margin-bottom: 30px;">
+                  <p style="margin-bottom: 30px">
                     <span class="l_span">收款账户：</span>
                     <span class="r_span">
-                      <span>{{paymentWay.payAccountAlipay}}</span>
-                      <el-button size="small" plain :data-clipboard-text="paymentWay.payAccountAlipay" @click="copy('#zfb-copy2')" id="zfb-copy2" class="button">复制</el-button>
+                      <span>{{ paymentWay.payAccountAlipay }}</span>
+                      <el-button
+                        size="small"
+                        plain
+                        :data-clipboard-text="paymentWay.payAccountAlipay"
+                        @click="copy('#zfb-copy2')"
+                        id="zfb-copy2"
+                        class="button"
+                        >复制</el-button
+                      >
                     </span>
                   </p>
                   <p class="ewm">
                     <span class="l_span">收款码：</span>
                     <span class="r_span">
                       <!-- <span ref="zfbEwm"></span> -->
-                      <img :src="paymentWay.payQrcodeAlipay" alt="支付宝二维码">
+                      <img
+                        :src="downloadDomain + paymentWay.payQrcodeAlipay"
+                        alt="支付宝二维码"
+                      />
                     </span>
                   </p>
                 </div>
@@ -257,7 +392,8 @@ export default {
       dialogVisible: false,
       goodlist: [], // 套餐数据
       radio: '1',
-      zdy: { // 自定义支付
+      zdy: {
+        // 自定义支付
         id: '',
         price: ''
       },
@@ -274,11 +410,11 @@ export default {
       // category(空号套餐：0,实时套餐：1 )
       // type = 0是标准套餐，1是自定义套餐
       const { data } = await this.$http.post('front/personal/goodsList')
-      data.data.map(item => {
+      data.data.map((item) => {
         if (item.type === 0) {
           if (this.type === '空号检测') {
             if (item.category === 0) this.goodlist.push(item)
-          } else if (this.type === '实时检测') {
+          } else if (this.type === '实时查询') {
             if (item.category === 1) this.goodlist.push(item)
           }
         } else if (item.type === 1) {
@@ -287,13 +423,13 @@ export default {
               this.zdy.id = item.id
               this.custom = item
             }
-            console.log('this.custom1', this.custom)
-          } else if (this.type === '实时检测') {
+            // console.log('this.custom1', this.custom)
+          } else if (this.type === '实时查询') {
             if (item.category === 1) {
               this.zdy.id = item.id
               this.custom = item
             }
-            console.log('this.custom2', this.custom)
+            // console.log('this.custom2', this.custom)
           }
         }
       })
@@ -303,7 +439,9 @@ export default {
     // 点击套餐
     async activeCut(obj, i) {
       this.active = i
-      const { data } = await this.$http.get(`front/personal/qrCodeString/${obj.id}/${obj.price}`)
+      const { data } = await this.$http.get(
+        `front/personal/qrCodeString/${obj.id}/${obj.price}`
+      )
       if (data.code !== 200) return this.$message.error(data.msg)
       this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
       this.payAmount = obj.price
@@ -313,10 +451,12 @@ export default {
     },
     // 自定义充值
     async zdyRecharge() {
-      console.log(this.zdy)
+      // console.log(this.zdy)
       if (!(this.zdy.id && this.zdy.price)) return
       this.payAmount = this.zdy.price
-      const { data } = await this.$http.get(`front/personal/qrCodeString/${this.zdy.id}/${this.zdy.price}`)
+      const { data } = await this.$http.get(
+        `front/personal/qrCodeString/${this.zdy.id}/${this.zdy.price}`
+      )
       if (data.code !== 200) return this.$message.error(data.msg)
       this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
       this.orderNo = data.data.orderNo
@@ -341,11 +481,17 @@ export default {
       this.$refs.qrCodeUrl.innerHTML = ''
     },
     gotype() {
-      this.type === '空号检测' ? this.$router.push('/emptynumber') : this.type === '实时检测' ? this.$router.push('/realtime') : console.log('gotype error')
+      this.type === '空号检测'
+        ? this.$router.push('/emptynumber')
+        : this.type === '实时查询'
+          ? this.$router.push('/realtime')
+          : console.log('gotype error')
     },
     // 获取订单状态
     async getQrCodePayState(orderNo) {
-      const { data } = await this.$http.get(`front/personal/getQrCodePayState/${orderNo}`)
+      const { data } = await this.$http.get(
+        `front/personal/getQrCodePayState/${orderNo}`
+      )
       if (data.code !== 200) return this.$message.error(data.msg)
       clearInterval(this.timer)
       switch (data.data) {
@@ -361,7 +507,15 @@ export default {
           this.$message.error('订单已超时，请重新选择套餐支付')
           break
         case 2 || 3: // 成功
-          this.$message.success(`充值成功，即将跳转${this.type === '0' ? '空号检测' : this.type === '1' ? '实时检测' : ''}页面`)
+          this.$message.success(
+            `充值成功，即将跳转${
+              this.type === '0'
+                ? '空号检测'
+                : this.type === '1'
+                ? '实时查询'
+                : ''
+            }页面`
+          )
           clearInterval(this.timer)
           setTimeout(() => {
             this.gotype()
@@ -390,11 +544,11 @@ export default {
     // 点击复制
     copy(dom) {
       let clipboard = new Clipboard(dom)
-      clipboard.on('success', e => {
+      clipboard.on('success', (e) => {
         this.$message.success('复制成功')
         clipboard.destroy()
       })
-      clipboard.on('error', e => {
+      clipboard.on('error', (e) => {
         this.$message.error('该浏览器不支持自动复制')
         clipboard.destroy()
       })
@@ -474,7 +628,7 @@ export default {
       align-items: center;
       margin-bottom: 23px;
       height: 28px;
-      line-height: 28PX;
+      line-height: 28px;
       img {
         margin-right: 10px;
         width: 28px;
@@ -500,15 +654,16 @@ export default {
     cursor: pointer;
     position: relative;
     &.active {
-      border: 1px solid #409EFF;
+      border: 1px solid #409eff;
     }
-    .choose { // 右下角对号
+    .choose {
+      // 右下角对号
       position: absolute;
       bottom: 0px;
       right: 0px;
       width: 39px;
       height: 39px;
-      background: url('../assets/img/对号.png')
+      background: url('../assets/img/对号.png');
     }
     .q-title {
       font-size: 16px;
@@ -520,7 +675,7 @@ export default {
       margin: 5px auto;
       border-bottom: 3px solid #fff;
       &.active {
-        border-bottom: 3px solid #409EFF;
+        border-bottom: 3px solid #409eff;
       }
     }
     .qian {
@@ -627,7 +782,7 @@ export default {
     color: #f34653;
     font-size: 24px;
   }
-  .qrcode{
+  .qrcode {
     display: inline-block;
     margin: 10px 0 5px 0;
     img {

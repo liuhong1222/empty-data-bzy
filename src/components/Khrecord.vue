@@ -46,7 +46,7 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="queryInfo.current"
+            :current-page="queryInfo.page"
             :page-sizes="[10, 15, 20, 25, 30]"
             :page-size="queryInfo.size"
             layout="prev, pager, next, sizes, jumper"
@@ -69,7 +69,7 @@ export default {
       timer: [],
       queryInfo: {
         // keyword: '',
-        current: 1,
+        page: 1,
         size: 10,
         customerId: '',
         createTimeFrom: '',
@@ -91,9 +91,10 @@ export default {
       } else {
         this.queryInfo.createTimeFrom = this.queryInfo.createTimeEnd = ''
       }
+      this.queryInfo.category = 0
       const { data } = await this.$http.post('front/recharge/getPageList', this.queryInfo)
       if (data.code !== 200) return this.$message.error(data.msg)
-      this.tableData = data.data.records
+      this.tableData = data.data.list
       this.total = parseInt(data.data.total)
     },
     handleSizeChange(newSize) {
@@ -101,7 +102,7 @@ export default {
       this.getPageList()
     },
     handleCurrentChange(newCurrent) {
-      this.queryInfo.current = newCurrent
+      this.queryInfo.page = newCurrent
       this.getPageList()
     }
   },

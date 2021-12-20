@@ -13,13 +13,15 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : './',
   devServer: {
     host: lIP, // can be overwritten by process.env.HOST
-    port: 9999, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 10000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     https: false,
     open: true,
     openPage: '/',
     proxy: {
       '/apis/*': {
-        target: 'http://127.0.0.1:8802',
+        // target: 'http://172.18.109.136:8883', // xybb
+        target: 'http://172.16.43.37:8883', // stable
+        // target: 'http://172.18.109.136:8802', // 迅龙
         // target: 'http://khkjc.com/',
         ws: false,
         secure: false,
@@ -39,6 +41,11 @@ module.exports = {
         pathRewrite: {
           '^/mock': ''
         }
+      },
+      '/batch_download/*': {
+        target: 'http://172.16.43.37:8088',
+        secure: false,
+        changeOrigin: true
       }
     }
   }
