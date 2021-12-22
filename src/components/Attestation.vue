@@ -147,30 +147,6 @@
             <!-- 个人 -->
             <div v-if="personalInfo.customerType == 0">
               <el-form-item
-                label="身份证国徽面"
-                style="display: block"
-                prop="idCardBackPath"
-              >
-                <el-upload
-                  class="avatar-uploader"
-                  action=""
-                  accept=".jpg,.jpeg,.png"
-                  list-type="picture-card"
-                  :show-file-list="false"
-                  :on-change="codeChange3"
-                >
-                  <img
-                    v-if="AttestationForm.idCardBackPath"
-                    :src="downloadDomain + AttestationForm.idCardBackPath"
-                    class="avatar"
-                  />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  <div slot="tip" class="el-upload__tip">
-                    <p><strong>身份证上传后，以下内容可自动识别</strong></p>
-                  </div>
-                </el-upload>
-              </el-form-item>
-              <el-form-item
                 label="身份证人像面"
                 style="display: block"
                 prop="idCardFrontPath"
@@ -186,6 +162,30 @@
                   <img
                     v-if="AttestationForm.idCardFrontPath"
                     :src="downloadDomain + AttestationForm.idCardFrontPath"
+                    class="avatar"
+                  />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  <div slot="tip" class="el-upload__tip">
+                    <p><strong>身份证上传后，以下内容可自动识别</strong></p>
+                  </div>
+                </el-upload>
+              </el-form-item>
+              <el-form-item
+                label="身份证国徽面"
+                style="display: block"
+                prop="idCardBackPath"
+              >
+                <el-upload
+                  class="avatar-uploader"
+                  action=""
+                  accept=".jpg,.jpeg,.png"
+                  list-type="picture-card"
+                  :show-file-list="false"
+                  :on-change="codeChange3"
+                >
+                  <img
+                    v-if="AttestationForm.idCardBackPath"
+                    :src="downloadDomain + AttestationForm.idCardBackPath"
                     class="avatar"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
