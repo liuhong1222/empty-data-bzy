@@ -1,56 +1,84 @@
 <template>
-  <div class='find-password'>
-    <el-form
-      ref='form'
-      :model='form'
-      :rules='rules'
-    >
+  <div class="find-password">
+    <el-form ref="form" :model="form" :rules="rules">
       <el-form-item>
-        <div class='login-text'>
-          <span class='title'>找回密码</span>
+        <div class="login-text">
+          <span class="title">找回密码</span>
         </div>
       </el-form-item>
-      <div class='mobile-code-wrap' v-if='isFind'>
-        <el-form-item prop='mobile'>
-          <el-input size='large' v='form.mobile' placeholder='手机号'/>
+      <div class="mobile-code-wrap" v-if="isFind">
+        <el-form-item prop="mobile">
+          <el-input size="large" v-model="form.mobile" placeholder="手机号" />
         </el-form-item>
-        <el-form-item prop='code'>
-          <el-input size='large' style='width:240px' v='form.code' placeholder='验证码' />
-          <el-button size='large' style='width: 104px' v-if='isCountDown' :disabled='true' type='default'>{{ count }} s</el-button>
-          <el-button size='large' v-else type='default' @click='getCode'>获取验证码</el-button>
+        <el-form-item prop="code">
+          <el-input
+            size="large"
+            style="width: 240px"
+            v-model="form.code"
+            placeholder="验证码"
+          />
+          <el-button
+            size="large"
+            style="width: 104px"
+            v-if="isCountDown"
+            :disabled="true"
+            type="default"
+            >{{ count }} s</el-button
+          >
+          <el-button size="large" v-else type="default" @click="getCode"
+            >获取验证码</el-button
+          >
         </el-form-item>
         <el-form-item>
-          <el-button size='large' style='width:100%' type='primary' @click='onNext'>
+          <el-button
+            size="large"
+            style="width: 100%"
+            type="primary"
+            @click="onNext"
+          >
             <span class="login-btn">下一步</span>
-            <img src='@/assets/img/arrow.svg' alt='right'>
+            <img src="@/assets/img/arrow.svg" alt="right" />
           </el-button>
         </el-form-item>
         <el-form-item>
-          <div class='find-pass-wrap'>
+          <div class="find-pass-wrap">
             <div>
-              <span class='grey'>无法接受验证码？</span>
-              <span class='blue'>联系客服</span>
+              <span class="grey">无法接受验证码？</span>
+              <span class="blue">联系客服</span>
             </div>
-            <span class='blue' @click='toLogin'>返回登录</span>
+            <span class="blue" @click="toLogin">返回登录</span>
           </div>
         </el-form-item>
       </div>
-      <div class='new-pass-wrap' v-if='!isFind'>
-        <el-form-item prop='password'>
-          <el-input-password size='large'  v='form.password' placeholder='输入密码' />
+      <div class="new-pass-wrap" v-if="!isFind">
+        <el-form-item prop="password">
+          <el-input-password
+            size="large"
+            v-model="form.password"
+            placeholder="输入密码"
+          />
         </el-form-item>
-        <el-form-item prop='passwordRepeat'>
-          <el-input-password size='large'  v='form.passwordRepeat' placeholder='确认新密码' />
+        <el-form-item prop="passwordRepeat">
+          <el-input-password
+            size="large"
+            v-model="form.passwordRepeat"
+            placeholder="确认新密码"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button size='large' style='width:100%' type='primary' @click='changePass'>
+          <el-button
+            size="large"
+            style="width: 100%"
+            type="primary"
+            @click="changePass"
+          >
             <span class="login-btn">确认修改</span>
-            <img src='@/assets/img/arrow.svg' alt='right'>
+            <img src="@/assets/img/arrow.svg" alt="right" />
           </el-button>
         </el-form-item>
         <el-form-item>
-          <div class='forget-pass-wrap'>
-            <span class='blue' @click='toLogin'>返回登录</span>
+          <div class="forget-pass-wrap">
+            <span class="blue" @click="toLogin">返回登录</span>
           </div>
         </el-form-item>
       </div>
@@ -64,24 +92,26 @@ const Base64 = require('js-base64').Base64
 export default {
   name: 'FindPassword',
   components: {},
-  data () {
+  data() {
     // 验证码校验
     var validateCode = (rule, value, callback) => {
-      this.$api.validateCode({
-        userName: this.form.userName,
-        mobile: this.form.mobile,
-        code: this.form.code
-      }).then((res) => {
-        const { code, message } = res
-        if (code === '000000') {
-          // 验证码校验通过
-          callback()
-          this.validateStatus = true
-          this.onNext()
-        } else {
-          callback(new Error(message))
-        }
-      })
+      this.$api
+        .validateCode({
+          userName: this.form.userName,
+          mobile: this.form.mobile,
+          code: this.form.code
+        })
+        .then((res) => {
+          const { code, message } = res
+          if (code === '000000') {
+            // 验证码校验通过
+            callback()
+            this.validateStatus = true
+            this.onNext()
+          } else {
+            callback(new Error(message))
+          }
+        })
     }
     // 新密码校验
     var validateNewPass = (rule, value, callback) => {
@@ -135,13 +165,23 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 位字符', trigger: 'blur' },
+          {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 16 位字符',
+            trigger: 'blur'
+          },
           { validator: validateNewPass, trigger: 'blur' }
           // { validator: validateStrength, trigger: 'blur' }
         ],
         passwordRepeat: [
           { required: true, message: '确认密码不能为空', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 位字符', trigger: 'blur' },
+          {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 16 位字符',
+            trigger: 'blur'
+          },
           { validator: validatePass, trigger: 'blur' }
         ]
       },
@@ -150,29 +190,32 @@ export default {
       timer: null
     }
   },
-  computed: {
-
-  },
-  created() {
-
-  },
+  computed: {},
+  created() {},
   methods: {
     // 获取验证码
-    getCode() {
+    async getCode() {
       if (this.form.mobile) {
-        this.$api.forgetPwd({
-          mobile: this.form.mobile
-        }).then((res) => {
-          const { code, data = '', message } = res
-          this.countDownFunc()
-          if (code === '000000') {
-            this.countDownFunc()
-            this.form.userName = data
-            this.$message.success(message)
-          } else {
-            this.$message.error(message)
-          }
+        // this.$api
+        //   .forgetPwd({
+        //     mobile: this.form.mobile
+        //   })
+        //   .then((res) => {
+        //     const { code, data = '', message } = res
+        //     this.countDownFunc()
+        //     if (code === '000000') {
+        //       this.countDownFunc()
+        //       this.form.userName = data
+        //       this.$message.success(message)
+        //     } else {
+        //       this.$message.error(message)
+        //     }
+        //   })
+        const { data } = await this.$http.post('front/customer/sendSms', {
+          phone: this.form.mobile
         })
+        if (data.code !== 200) return this.$message.error(data.msg)
+        console.log(data)
       } else {
         this.$message.error('请先输入手机号')
       }
@@ -211,18 +254,20 @@ export default {
     changePass() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$api.modifyPwd({
-            mobile: this.form.mobile,
-            pwd: Base64.encode(this.form.password)
-          }).then((res) => {
-            const { code, message } = res
-            if (code === '000000') {
-              this.$message.success('密码修改成功')
-              this.$parent.toLogin()
-            } else {
-              this.$message.error(message)
-            }
-          })
+          this.$api
+            .modifyPwd({
+              mobile: this.form.mobile,
+              pwd: Base64.encode(this.form.password)
+            })
+            .then((res) => {
+              const { code, message } = res
+              if (code === '000000') {
+                this.$message.success('密码修改成功')
+                this.$parent.toLogin()
+              } else {
+                this.$message.error(message)
+              }
+            })
         }
       })
     }
@@ -230,7 +275,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .login-text {
   width: 100%;
   display: flex;
@@ -238,11 +283,11 @@ export default {
   justify-content: space-between;
   .title {
     font-size: 28px;
-    color: #252A3D;
+    color: #252a3d;
   }
   .note {
     font-size: 14px;
-    color: #666A77;
+    color: #666a77;
   }
 }
 .find-pass-wrap {
@@ -250,13 +295,13 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   font-size: 14px;
-  span{
+  span {
     cursor: pointer;
     &.grey {
-      color: #666A77;
+      color: #666a77;
     }
     &.blue {
-      color: #3A72FF;
+      color: #3a72ff;
     }
   }
 }
