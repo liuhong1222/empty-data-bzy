@@ -72,6 +72,7 @@
       custom-class="dialog-reset dialog-loading"
       :show-close="false"
       :visible="isUploadShow"
+      append-to-body
     >
       <img height="30" src="../assets/img/loading.png" />
       <p>{{ uploadCompleted }}</p>
@@ -82,6 +83,7 @@
       custom-class="dialog-reset dialog-loading"
       :show-close="false"
       :visible="dialogIndex == 1"
+      append-to-body
     >
       <img height="30" src="../assets/img/loading.png" />
       <p>文件读取中，请勿离开...</p>
@@ -91,6 +93,7 @@
       custom-class="dialog-reset dialog-conduct"
       :show-close="false"
       :visible="dialogIndex == 2"
+      append-to-body
     >
       <template slot="title">
         <span>实时检测</span>
@@ -138,6 +141,7 @@
       custom-class="dialog-reset dialog-suspend"
       :show-close="false"
       :visible="dialogIndex == 3"
+      append-to-body
     >
       <template slot="title">
         <span>提示</span>
@@ -161,6 +165,7 @@
       custom-class="dialog-reset dialog-success"
       :show-close="false"
       :visible="dialogIndex == 4"
+      append-to-body
     >
       <p>
         <img

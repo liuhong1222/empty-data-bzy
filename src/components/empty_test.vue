@@ -100,6 +100,7 @@
       custom-class="dialog-reset dialog-loading"
       :show-close="false"
       :visible="dialogIndex == 1"
+      append-to-body
     >
       <img height="30" src="../assets/img/loading.png" />
       <p>文件读取中，请勿离开...</p>
@@ -109,6 +110,7 @@
       custom-class="dialog-reset dialog-conduct"
       :show-close="false"
       :visible="dialogIndex == 2"
+      append-to-body
     >
       <template slot="title">
         <span>空号检测</span>
@@ -156,6 +158,7 @@
       custom-class="dialog-reset dialog-suspend"
       :show-close="false"
       :visible="dialogIndex == 3"
+      append-to-body
     >
       <template slot="title">
         <span>提示</span>
@@ -179,6 +182,7 @@
       custom-class="dialog-reset dialog-success"
       :show-close="false"
       :visible="dialogIndex == 4"
+      append-to-body
     >
       <p>
         <img
@@ -206,6 +210,7 @@
       custom-class="dialog-batch"
       :show-close="false"
       :visible="dialogVisible"
+      append-to-body
     >
       <template slot="title">
         <span>批量检测</span>
@@ -279,6 +284,7 @@
       custom-class="dialog-confirm"
       :show-close="false"
       :visible="mulStepIndex == 2"
+      append-to-body
     >
       <p>
         文档上传后会自动进行检测，<br />
@@ -302,6 +308,7 @@
       custom-class="dialog-confirm"
       :show-close="false"
       :visible="mulStepOver"
+      append-to-body
     >
       <p>
         <img
