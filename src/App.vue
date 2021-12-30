@@ -209,7 +209,7 @@ export default {
             "推荐使用:<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>谷歌</a>," +
             "<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>火狐</a>," +
             '其他双核极速模式'
-          var str3 = '联系方式：' + data.data.domainContactWay
+          var str3 = '联系方式：' + data.data.domainContactWay || ''
           document.writeln(
             "<pre style='text-align:center;color:#fff;background-color:rgb(56, 120, 172); height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" +
               "<h2 style='padding-top:200px;margin:0'><strong>" +

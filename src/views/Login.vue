@@ -75,11 +75,11 @@
                 <img src="@/assets/img/arrow.svg" alt="right" />
               </el-button>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
               <div class="forget-pass-wrap">
                 <span @click="toFindPass">忘记密码?</span>
               </div>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <el-form
             v-else
@@ -122,11 +122,11 @@
                 <img src="@/assets/img/arrow.svg" alt="logo" />
               </el-button>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
               <div class="forget-pass-wrap">
                 <span @click="toFindPass">忘记密码?</span>
               </div>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
         </div>
         <find-password v-if="isFind" />
