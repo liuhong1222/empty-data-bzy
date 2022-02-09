@@ -936,7 +936,7 @@ export default {
         error: (e) => {
           itemobj.checkval = 1
           itemobj.stateDesc = '<span style="color: #F56C6C">文件上传失败</span>'
-          this.mulBeginUpload(index)
+          // this.mulBeginUpload(index) // 分片上传失败时，不重传该包，而是改为重传该片
           this.$message.error(e)
           this.handeldone()
           // this.dialogVisible = false
