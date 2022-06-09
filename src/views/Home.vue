@@ -165,6 +165,9 @@
               <el-menu-item-group>
                 <el-menu-item index="/khrecord">空号检测</el-menu-item>
                 <el-menu-item index="/sskecord">实时查询</el-menu-item>
+                <el-menu-item index="/international_record"
+                  >国际号码检测</el-menu-item
+                >
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
