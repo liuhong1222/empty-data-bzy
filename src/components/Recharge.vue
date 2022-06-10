@@ -416,6 +416,8 @@ export default {
             if (item.category === 0) this.goodlist.push(item)
           } else if (this.type === '实时查询') {
             if (item.category === 1) this.goodlist.push(item)
+          } else if (this.type === '国际号码检测') {
+            if (item.category === 2) this.goodlist.push(item)
           }
         } else if (item.type === 1) {
           if (this.type === '空号检测') {
@@ -426,6 +428,12 @@ export default {
             // console.log('this.custom1', this.custom)
           } else if (this.type === '实时查询') {
             if (item.category === 1) {
+              this.zdy.id = item.id
+              this.custom = item
+            }
+            // console.log('this.custom2', this.custom)
+          } else if (this.type === '国际号码检测') {
+            if (item.category === 2) {
               this.zdy.id = item.id
               this.custom = item
             }
@@ -481,11 +489,19 @@ export default {
       this.$refs.qrCodeUrl.innerHTML = ''
     },
     gotype() {
-      this.type === '空号检测'
-        ? this.$router.push('/emptynumber')
-        : this.type === '实时查询'
-          ? this.$router.push('/realtime')
-          : console.log('gotype error')
+      switch (this.type) {
+        case '空号检测':
+          this.$router.push('/emptynumber')
+          break
+        case '实时查询':
+          this.$router.push('/realtime')
+          break
+        case '国际号码检测':
+          this.$router.push('/international')
+          break
+        default:
+          break
+      }
     },
     // 获取订单状态
     async getQrCodePayState(orderNo) {
@@ -513,6 +529,8 @@ export default {
                 ? '空号检测'
                 : this.type === '1'
                 ? '实时查询'
+                : this.type === '2'
+                ? '国际号码检测'
                 : ''
             }页面`
           )
