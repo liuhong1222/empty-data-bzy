@@ -114,6 +114,10 @@
               <i class="iconfont iconjiance"></i>
               <span slot="title">号码实时查询</span>
             </el-menu-item>
+            <el-menu-item index="/international">
+              <i class="el-icon-bangzhu gj-icon"></i>
+              <span slot="title">国际号码检测</span>
+            </el-menu-item>
             <!-- <el-menu-item index="/emptyapi">
             <i class="iconfont iconshendujiance"></i>
             <span slot="title">空号检测API</span>
@@ -283,6 +287,7 @@ export default {
           '/emptynumber',
           '/realtime',
           '/emptyrealapi',
+          '/international',
           '/matching'
         ]
         if (arr.indexOf(route.path) > -1) {
@@ -425,6 +430,9 @@ export default {
       height: 100%;
       .icon {
         font-size: 16px;
+      }
+      .gj-icon {
+        margin-left: -5px;
       }
     }
   }

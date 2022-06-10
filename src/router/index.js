@@ -38,6 +38,11 @@ const routes = [
         component: () => import('../components/empty_real_api.vue')
       }, // 空号/实时查询api
       {
+        path: 'international',
+        name: 'international',
+        component: () => import('../components/International.vue')
+      }, // 国际号码检测
+      {
         path: 'matching',
         name: 'Matching',
         component: () => import('../components/Matching.vue')
