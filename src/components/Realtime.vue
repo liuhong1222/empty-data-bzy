@@ -400,7 +400,7 @@
               </div>
             </el-col>
             <el-col :span="4" style="width: 20%">
-              <div class="result-box">
+              <div class="result-box" style="border-right: none">
                 <p class="result-title">
                   不在网(空号)
                   <el-popover
@@ -563,7 +563,7 @@
               </div>
             </el-col>
             <el-col :span="4" style="width: 20%">
-              <div class="result-box">
+              <div class="result-box" style="border-right: none">
                 <p class="result-title">
                   未知
                   <el-popover
@@ -1809,7 +1809,7 @@ export default {
       width: 1px;
       position: absolute;
       top: -35px;
-      left: 49.6%;
+      left: 49.8%;
       border-right: 1px solid #e7e7e7;
     }
   }

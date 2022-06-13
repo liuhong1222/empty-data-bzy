@@ -168,7 +168,7 @@
               </div>
             </el-col>
             <el-col :span="12" style="width: 50%">
-              <div class="result-box">
+              <div class="result-box" style="border-right: none">
                 <p class="result-title">
                   未注册
                   <el-popover
