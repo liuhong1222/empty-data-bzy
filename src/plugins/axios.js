@@ -24,9 +24,9 @@ _axios.interceptors.request.use(
       // 在请求头中设置Authorization属性，发送token,'Bearer'表示类型(必须加)
       config.headers.token = ss.get('token')
     }
-    // debugger
-    config.headers.domain = window.location.hostname
-    // config.headers.domain = 'test.buzhen.com'
+
+    config.headers.domain = window.location.hostname // 发stable/上线
+    // config.headers.domain = 'test.buzhen.com' // 本地启动，ip访问
 
     // 统一为get请求URL，添加
     if (config.method === 'get') {
