@@ -147,21 +147,18 @@
                 </p>
                 <p class="result-size">
                   {{
-                    newInternational.已激活号 || newInternational.normal || 0
+                    newInternational.已激活号 ||
+                    newInternational.activeNumber ||
+                    0
                   }}
                 </p>
                 <el-button
                   size="medium"
                   :disabled="
                     !newInternational.已激活号url &&
-                    !newInternational.normalFilePath
+                    !newInternational.activeFilePath
                   "
-                  @click="
-                    downloadPro(
-                      newInternational.已激活号url ||
-                        newInternational.normalFilePath
-                    )
-                  "
+                  @click="downloadPro(newInternational.activeFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -183,20 +180,17 @@
                 <p class="result-size">
                   {{
                     newInternational.未注册 ||
-                    newInternational.numberPortability ||
+                    newInternational.noRegisterNumber ||
                     0
                   }}
                 </p>
                 <el-button
                   size="medium"
                   :disabled="
-                    !newInternational.未注册url && !newInternational.mnpFilePath
+                    !newInternational.未注册url &&
+                    !newInternational.noRegisterFilePath
                   "
-                  @click="
-                    downloadPro(
-                      newInternational.未注册url || newInternational.mnpFilePath
-                    )
-                  "
+                  @click="downloadPro(newInternational.noRegisterFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -292,47 +286,58 @@
                 }}</span>
               </template>
             </el-table-column>
+            <el-table-column prop="size" label="大小" width="100px">
+              <template slot-scope="scope">
+                {{
+                  scope.row.isOldData
+                    ? computeFileSize(scope.row.size)
+                    : computeFileSize(scope.row.zipSize)
+                }}
+              </template>
+            </el-table-column>
             <el-table-column
               prop="createTime"
               label="日期"
               width="160"
             ></el-table-column>
-            <el-table-column prop="normal" label="已激活">
+            <el-table-column prop="activeNumber" label="已激活">
               <template slot-scope="scope">
                 <a
                   :style="{
                     'pointer-events':
-                      !scope.row.normal || scope.row.normal == '0'
+                      !scope.row.activeNumber || scope.row.activeNumber == '0'
                         ? 'none'
                         : 'auto'
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '已激活.txt', 'normalFilePath')
+                    downloadTxt(scope.row, '已激活.txt', 'activeFilePath')
                   "
-                  >{{ scope.row.normal || 0 }}</a
+                  >{{ scope.row.activeNumber || 0 }}</a
                 >
               </template>
             </el-table-column>
-            <el-table-column prop="numberPortability" label="未注册">
+            <el-table-column prop="noRegisterNumber" label="未注册">
               <template slot-scope="scope">
                 <a
                   :style="{
                     'pointer-events':
-                      !scope.row.numberPortability ||
-                      scope.row.numberPortability == '0'
+                      !scope.row.noRegisterNumber ||
+                      scope.row.noRegisterNumber == '0'
                         ? 'none'
                         : 'auto'
                   }"
                   style="cursor: pointer; color: #6799ee"
-                  @click="downloadTxt(scope.row, '未注册.txt', 'mnpFilePath')"
-                  >{{ scope.row.numberPortability || 0 }}</a
+                  @click="
+                    downloadTxt(scope.row, '未注册.txt', 'noRegisterFilePath')
+                  "
+                  >{{ scope.row.noRegisterNumber || 0 }}</a
                 >
               </template>
             </el-table-column>
             <el-table-column
               prop="totalNumber"
-              label="筛查条数"
+              label="总条数"
             ></el-table-column>
             <el-table-column label="操作" width="100" fixed="right">
               <template slot-scope="scope">
@@ -669,13 +674,13 @@ export default {
         }
       })
     },
-    // 下载单个小包
+    // 检测结果-下载单个小包
     downloadPro(url) {
       if (this.personalInfo.unzipPassword) {
         this.$message.warning('已设置解压密码，无法直接下载单个文件')
         return
       }
-      let _url = `${this.downloadDomain}/actual/${url}`
+      let _url = `${this.downloadDomain}international/${url}`
       window.open(_url)
     },
     // 获取最新一条检测结果
@@ -733,7 +738,7 @@ export default {
               item.id
             }/${item.name + '.zip'}`
           } else {
-            url = `${this.batchDownload}/actual/${item.zipPath}`
+            url = `${this.batchDownload}/international/${item.zipPath}`
           }
           // console.log(url)
           const promise = getFile(encodeURI(url)).then((data) => {
@@ -765,14 +770,14 @@ export default {
       if (isOldData) {
         if (_url !== ' ') {
           // 此处下载全部直接使用返回URL
-          url = `${this.downloadDomain}/actual/${_url}`
+          url = `${this.downloadDomain}international/${_url}`
         } else {
-          url = `${this.downloadDomain}/international/${customerId}/${id}/${
+          url = `${this.downloadDomain}international/${customerId}/${id}/${
             name + '.zip'
           }`
         }
       } else {
-        url = `${this.downloadDomain}/actual/${zipPath}`
+        url = `${this.downloadDomain}international/${zipPath}`
       }
       this.downloadfunc(url)
     },
@@ -813,9 +818,9 @@ export default {
       )
       let url
       if (isOldData) {
-        url = `${this.downloadDomain}/international/${customerId}/${id}/${names}`
+        url = `${this.downloadDomain}international/${customerId}/${id}/${names}`
       } else {
-        url = `${this.downloadDomain}/actual/${rows[newUrl]}`
+        url = `${this.downloadDomain}international/${rows[newUrl]}`
       }
       // console.log(url)
 
@@ -850,7 +855,7 @@ export default {
         if (confirmResult !== 'confirm') return this.$message.info('已取消删除')
         arr.map(async (item) => {
           const { data } = await this.$http.post(
-            `front/international/delete/${item.id}/${item.isOldData}`
+            `front/international/delete/${item.id}`
           )
           if (data.code !== 200) return this.$message.error('删除失败')
           this.getInternationalPageList()

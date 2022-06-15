@@ -117,8 +117,8 @@ export default {
       const { data } = await this.$http.get('front/personal/personalInfo')
       if (data.code !== 200) return this.$message.error(data.msg)
       this.personalInfo = data.data
-      // console.log(this.personalInfo)
-      this.queryInfo.customerId = this.personalInfo.id
+      this.queryInfo.customerId = data.data.id
+      this.getPageList()
     },
     async getPageList() {
       if (this.timer != null) {
@@ -127,7 +127,7 @@ export default {
       } else {
         this.queryInfo.createTimeFrom = this.queryInfo.createTimeEnd = ''
       }
-      this.queryInfo.category = 1
+      this.queryInfo.category = 2
       const { data } = await this.$http.post(
         'front/recharge/getPageList',
         this.queryInfo
@@ -148,7 +148,6 @@ export default {
   },
   mounted() {
     this.getData()
-    this.getPageList()
   }
 }
 </script>

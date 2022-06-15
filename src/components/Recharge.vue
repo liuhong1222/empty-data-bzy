@@ -24,7 +24,9 @@
       </el-row> -->
       <el-tab-pane label="自动充值">
         <el-row style="margin: 5px 15px">
-          <span style="font-size: 14px; font-weight: 700"
+          <span
+            style="font-size: 14px; font-weight: 700"
+            v-if="goodlist && goodlist.length > 0"
             >选择套餐扫码充值</span
           >
         </el-row>
@@ -62,7 +64,7 @@
               </div>
             </el-col>
           </el-col>
-          <el-col :span="7" :offset="2">
+          <el-col :span="7" :offset="2" v-if="payAmount">
             <div class="dialog">
               <p>
                 应付金额：<span class="number">{{ payAmount }}</span
@@ -78,7 +80,7 @@
           </el-col>
         </el-row>
         <el-row :span="24">
-          <el-col :span="24" class="z-container">
+          <el-col :span="24" class="z-container" v-if="zdy.id">
             <el-col :span="24" class="zdy">自定义充值</el-col>
             <el-col :span="24" :offset="1">
               <el-input
@@ -383,9 +385,6 @@ import QRCode from 'qrcodejs2'
 import Clipboard from 'clipboard'
 import { ls } from '../utils/storage'
 export default {
-  // props: {
-  //   type: { type: String, required: true }
-  // },
   data() {
     return {
       active: 0, // 当前第几个套餐
@@ -425,19 +424,16 @@ export default {
               this.zdy.id = item.id
               this.custom = item
             }
-            // console.log('this.custom1', this.custom)
           } else if (this.type === '实时查询') {
             if (item.category === 1) {
               this.zdy.id = item.id
               this.custom = item
             }
-            // console.log('this.custom2', this.custom)
           } else if (this.type === '国际号码检测') {
             if (item.category === 2) {
               this.zdy.id = item.id
               this.custom = item
             }
-            // console.log('this.custom2', this.custom)
           }
         }
       })
