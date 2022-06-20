@@ -23,7 +23,24 @@
         </el-col>
       </el-row> -->
       <el-tab-pane label="自动充值">
-        <el-row style="margin: 5px 15px">
+        <el-row style="margin: 10px 15px">
+          <span style="font-size: 14px; font-weight: 700">选择支付方式</span>
+        </el-row>
+        <el-row style="margin: 10px 15px">
+          <div class="payType-wrap">
+            <div
+              class="payType-section"
+              v-for="item in payTypeList"
+              :key="item.id"
+              @click="selectPayType(item)"
+              :class="{ active: payTypeVal === item.id }"
+            >
+              <img :src="item.imgUrl" alt="" />
+              <span class="choose" v-if="payTypeVal === item.id"></span>
+            </div>
+          </div>
+        </el-row>
+        <el-row style="margin: 10px 15px">
           <span
             style="font-size: 14px; font-weight: 700"
             v-if="goodlist && goodlist.length > 0"
@@ -401,7 +418,12 @@ export default {
       payAmount: 0,
       orderNo: '',
       type: '',
-      custom: undefined
+      custom: undefined,
+      payTypeList: [
+        { imgUrl: require('@/assets/img/recharge_zfb.png'), id: 1 },
+        { imgUrl: require('@/assets/img/recharge_wx.png'), id: 8 }
+      ],
+      payTypeVal: 1
     }
   },
   methods: {
@@ -444,7 +466,7 @@ export default {
     async activeCut(obj, i) {
       this.active = i
       const { data } = await this.$http.get(
-        `front/personal/qrCodeString/${obj.id}/${obj.price}`
+        `front/personal/qrCodeString/${obj.id}/${obj.price}?payType=${this.payTypeVal}`
       )
       if (data.code !== 200) return this.$message.error(data.msg)
       this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
@@ -459,7 +481,7 @@ export default {
       if (!(this.zdy.id && this.zdy.price)) return
       this.payAmount = this.zdy.price
       const { data } = await this.$http.get(
-        `front/personal/qrCodeString/${this.zdy.id}/${this.zdy.price}`
+        `front/personal/qrCodeString/${this.zdy.id}/${this.zdy.price}?payType=${this.payTypeVal}`
       )
       if (data.code !== 200) return this.$message.error(data.msg)
       this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
@@ -566,6 +588,10 @@ export default {
         this.$message.error('该浏览器不支持自动复制')
         clipboard.destroy()
       })
+    },
+    selectPayType(item) {
+      this.payTypeVal = item.id
+      this.activeCut(this.goodlist[this.active], this.active)
     }
   },
   mounted() {
@@ -652,6 +678,38 @@ export default {
       .title {
         font-size: 16px;
         color: #7f859f;
+      }
+    }
+  }
+  .payType-wrap {
+    display: flex;
+    flex-direction: row;
+    padding-left: 3.5%;
+    .payType-section {
+      width: 240px;
+      height: 60px;
+      border-radius: 2px;
+      border: 1px solid #dcdfe6;
+      text-align: center;
+      line-height: 55px;
+      cursor: pointer;
+      img {
+        margin-top: 10px;
+      }
+      &:first-child {
+        margin-right: 24px;
+      }
+      &.active {
+        border: 1px solid #409eff;
+        position: relative;
+      }
+      .choose {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 39px;
+        height: 39px;
+        background: url('../assets/img/对号.png');
       }
     }
   }

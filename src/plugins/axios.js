@@ -26,12 +26,16 @@ _axios.interceptors.request.use(
     }
 
     config.headers.domain = window.location.hostname // 发stable/上线
-    // config.headers.domain = 'test.buzhen.com' // 本地启动，ip访问
+    // config.headers.domain = 'test.xunlong.com' // 本地启动，ip访问
 
     // 统一为get请求URL，添加
     if (config.method === 'get') {
       let time = new Date().getTime()
-      config.url += '?time=' + time
+      if (config.url.indexOf('?') > -1) {
+        config.url += '&time=' + time
+      } else {
+        config.url += '?time=' + time
+      }
     }
     return config
   },
