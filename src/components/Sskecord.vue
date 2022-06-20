@@ -44,23 +44,7 @@
             <el-table-column prop="price" label="单价（元）"></el-table-column>
             <el-table-column prop="payType" label="充值类型">
               <template slot-scope="scope">
-                {{
-                  scope.row.payType == '0'
-                    ? '对公转账'
-                    : scope.row.payType == '1'
-                    ? '支付宝扫码付'
-                    : scope.row.payType == '2'
-                    ? '注册赠送'
-                    : scope.row.payType == '3'
-                    ? '赠送'
-                    : scope.row.payType == '4'
-                    ? '对公支付宝转账'
-                    : scope.row.payType == '5'
-                    ? '对私支付宝'
-                    : scope.row.payType == '6'
-                    ? '对私微信'
-                    : '对私转账'
-                }}
+                {{ payTypeMap[scope.row.payType] }}
               </template>
             </el-table-column>
             <el-table-column
@@ -109,6 +93,17 @@ export default {
         customerId: '',
         createTimeFrom: '',
         createTimeEnd: ''
+      },
+      payTypeMap: {
+        0: '对公转账',
+        1: '支付宝扫码付',
+        2: '注册赠送',
+        3: '赠送',
+        4: '对公支付宝转账',
+        5: '对私支付宝',
+        6: '对私微信',
+        7: '对私转账',
+        8: '微信扫码付'
       }
     }
   },
