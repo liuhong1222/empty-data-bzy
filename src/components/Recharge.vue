@@ -81,7 +81,7 @@
               </div>
             </el-col>
           </el-col>
-          <el-col :span="7" :offset="2" v-if="payAmount">
+          <el-col :span="7" :offset="2">
             <div class="dialog">
               <p>
                 应付金额：<span class="number">{{ payAmount }}</span
