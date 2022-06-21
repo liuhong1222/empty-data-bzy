@@ -88,7 +88,11 @@
                 >元
               </p>
               <p ref="qrCodeUrl" class="qrcode"></p>
-              <p class="aliPay">打开<span>支付宝</span>扫一扫即可付款</p>
+              <p class="aliPay">
+                打开<span class="zfb" v-if="payTypeVal === 1">支付宝</span
+                ><span class="wx" v-if="payTypeVal === 8">微信</span
+                >扫一扫即可付款
+              </p>
               <p class="d-footer">
                 如需其他充值方式，或充值过程中遇到任何问题，请与
                 <label style="color: rgb(41, 131, 248)">客服人员联系</label>
@@ -874,8 +878,11 @@ export default {
     text-align: center;
     margin: 0 auto;
     color: #666;
-    span {
+    .zfb {
       color: #2983f8;
+    }
+    .wx {
+      color: #4baf4e;
     }
   }
   .d-footer {
