@@ -468,26 +468,31 @@ export default {
     },
     // 点击套餐
     async activeCut(obj, i) {
+      this.zdy.price = ''
+      this.payAmount = ''
+      this.isShowOpen()
       this.active = i
       const { data } = await this.$http.get(
         `front/personal/qrCodeString/${obj.id}/${obj.price}?payType=${this.payTypeVal}`
       )
       if (data.code !== 200) return this.$message.error(data.msg)
-      this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
       this.payAmount = obj.price
+      this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
       this.orderNo = data.data.orderNo
       clearInterval(this.timer)
       this.getQrCodePayState(data.data.orderNo)
     },
     // 自定义充值
     async zdyRecharge() {
-      // console.log(this.zdy)
+      this.active = ''
+      this.payAmount = ''
+      this.isShowOpen()
       if (!(this.zdy.id && this.zdy.price)) return
-      this.payAmount = this.zdy.price
       const { data } = await this.$http.get(
         `front/personal/qrCodeString/${this.zdy.id}/${this.zdy.price}?payType=${this.payTypeVal}`
       )
       if (data.code !== 200) return this.$message.error(data.msg)
+      this.payAmount = this.zdy.price
       this.creatQrCode(this.$refs.qrCodeUrl, data.data.qrCodeString, 175, 175)
       this.orderNo = data.data.orderNo
       clearInterval(this.timer)
@@ -595,7 +600,11 @@ export default {
     },
     selectPayType(item) {
       this.payTypeVal = item.id
-      this.activeCut(this.goodlist[this.active], this.active)
+      if (this.active !== '') {
+        this.activeCut(this.goodlist[this.active], this.active)
+      } else if (this.zdy.price) {
+        this.zdyRecharge()
+      }
     }
   },
   mounted() {
