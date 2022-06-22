@@ -81,7 +81,7 @@
               </div>
             </el-col>
           </el-col>
-          <el-col :span="7" :offset="2">
+          <el-col :span="7" :offset="2" v-show="payAmount">
             <div class="dialog">
               <p>
                 应付金额：<span class="number">{{ payAmount }}</span
@@ -408,7 +408,7 @@ import { ls } from '../utils/storage'
 export default {
   data() {
     return {
-      active: 0, // 当前第几个套餐
+      active: '', // 当前第几个套餐-默认不选中
       dialogVisible: false,
       goodlist: [], // 套餐数据
       radio: '1',
@@ -464,7 +464,7 @@ export default {
         }
       })
       // 初始化显示第一个套餐
-      this.activeCut(this.goodlist[0], 0)
+      // this.activeCut(this.goodlist[0], 0)
     },
     // 点击套餐
     async activeCut(obj, i) {
