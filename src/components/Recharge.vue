@@ -887,6 +887,11 @@ export default {
     text-align: center;
     margin: 0 auto;
     color: #666;
+    font-size: 12px;
+    span {
+      font-size: 15px;
+      font-weight: bold;
+    }
     .zfb {
       color: #2983f8;
     }

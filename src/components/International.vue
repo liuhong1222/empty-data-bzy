@@ -114,13 +114,15 @@
             @testSuccess="testSuccess"
           />
           <div class="gray">
-            <p>注: 1、号码文件中号码不管有没有带国码都必须选择国码</p>
-            <p class="txt">
-              2、每批上传的号码只能同一个国家的号码，不支持一次性筛查多个国家的号码
+            <p>
+              注:
+              1、号码文件中号码不管有没有带国码都<strong>必须选择国码</strong>；每批上传的号码只能同一个国家的号码，不支持一次性筛查多个国家的号码；筛查完下载的号码系统都已带上了国码
             </p>
-            <p class="txt">3、筛查完下载的号码系统都已带上了国码</p>
             <p class="txt">
-              4、文件格式仅支持TXT格式文件/每行一个手机号/支持最低2000条-200W条号码包上传/文件小于30MB
+              2、
+              <strong>
+                文件格式仅支持TXT格式文件/每行一个手机号/支持最低2000条-200W条号码包上传/txt文件小于30MB
+              </strong>
             </p>
           </div>
         </el-card>
@@ -1143,6 +1145,7 @@ export default {
     margin-top: 15px;
     .txt {
       margin-left: 19px;
+      margin-top: 10px;
     }
   }
   .btn-box {
