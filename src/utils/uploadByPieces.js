@@ -121,6 +121,14 @@ export const uploadByPieces = ({
       fetchForm.append('file', chunkInfo.chunk)
       fetchForm.append('identifier', fileMD5)
       fetchForm.append('fileRealName', file.name)
+      // 区分空号检测/实时检测/国际检测
+      if (productCodeType === 'empty') {
+        fetchForm.append('fileType ', 0) // 空号
+      } else if (productCodeType === 'realtime') {
+        fetchForm.append('fileType ', 1) // 实时
+      } else if (productCodeType === 'international') {
+        fetchForm.append('fileType ', 2) // 国际
+      }
 
       Vue.prototype.$http
         .post(fileUpload, fetchForm)
@@ -157,6 +165,15 @@ export const uploadByPieces = ({
       fetchForm.append('file', chunkInfo.chunk)
       fetchForm.append('identifier', fileMD5)
       fetchForm.append('fileRealName', file.name)
+      // 区分空号检测/实时检测/国际检测
+      if (productCodeType === 'empty') {
+        fetchForm.append('fileType ', 0) // 空号
+      } else if (productCodeType === 'realtime') {
+        fetchForm.append('fileType ', 1) // 实时
+      } else if (productCodeType === 'international') {
+        fetchForm.append('fileType ', 2) // 国际
+      }
+
       Vue.prototype.$http
         .post(fileUpload, fetchForm)
         .then((res) => {
@@ -256,8 +273,13 @@ export const uploadByPieces = ({
     // 区分空号检测/实时检测
     if (productCodeType === 'empty') {
       statusForm.append('productCode', 0) // 空号
+      statusForm.append('fileType', 0)
     } else if (productCodeType === 'realtime') {
       statusForm.append('productCode', 1) // 实时
+      statusForm.append('fileType', 1)
+    } else if (productCodeType === 'international') {
+      statusForm.append('productCode', 2) // 国际
+      statusForm.append('fileType', 2)
     }
     console.log(statusForm)
     Vue.prototype.$http
