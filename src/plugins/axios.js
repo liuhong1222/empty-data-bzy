@@ -29,12 +29,20 @@ _axios.interceptors.request.use(
     // config.headers.domain = 'test.xunlong.com' // 本地启动，ip访问
 
     // 统一为get请求URL，添加
+    const time = new Date().getTime()
     if (config.method === 'get') {
-      let time = new Date().getTime()
       if (config.url.indexOf('?') > -1) {
         config.url += '&time=' + time
       } else {
         config.url += '?time=' + time
+      }
+    } else if (config.method === 'post') {
+      if (config.data) {
+        if (config.data instanceof FormData) {
+          config.data.append('time', time)
+        } else {
+          config.data.time = time
+        }
       }
     }
     return config
