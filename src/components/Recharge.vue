@@ -71,6 +71,12 @@
                     >￥{{ item.specifications * 0.1 }}</del
                   >
                 </p>
+                <p v-if="type === '国际号码检测'" class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
+                    >￥{{ item.specifications * 0.005 }}</del
+                  >
+                </p>
                 <p v-else class="di">
                   {{ item.remark }}
                   <del style="display: block"
