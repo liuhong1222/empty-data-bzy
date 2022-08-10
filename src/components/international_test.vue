@@ -480,64 +480,63 @@ export default {
     //  200进行中，999979已完成
     getTestProcessMobile(type) {
       const testForm = new FormData()
-      testForm.append(
-        'fileId',
-        this.checkId || ss.get('internationalTestingID')
-      )
-      testForm.append(
-        'sendID',
-        this.sendID || ss.get('internationalTestingsendID')
-      )
-      this.$http
-        .post('/front/international/getTestProcessMobile', testForm)
-        .then((res) => {
-          if (res.data.code === 200) {
-            // 检测中
-            const { testCounts = '36', fileCounts } = res.data.data || {}
-            if (testCounts === '36') {
-              this.mobileObj = {
-                ...res.data.data,
-                testCounts: '0',
-                stateDesc: '准备检测'
-              }
-            } else {
-              if (testCounts === fileCounts) {
-                this.mobileObj = { ...res.data.data, stateDesc: '文件解析中' }
+      let fileId = this.checkId || ss.get('internationalTestingID')
+      let sendID = this.sendID || ss.get('internationalTestingsendID')
+      testForm.append('fileId', fileId)
+      testForm.append('sendID', sendID)
+      // 当id为空时，则不再调此方法
+      if (fileId && sendID) {
+        this.$http
+          .post('/front/international/getTestProcessMobile', testForm)
+          .then((res) => {
+            if (res.data.code === 200) {
+              // 检测中
+              const { testCounts = '36', fileCounts } = res.data.data || {}
+              if (testCounts === '36') {
+                this.mobileObj = {
+                  ...res.data.data,
+                  testCounts: '0',
+                  stateDesc: '准备检测'
+                }
               } else {
-                this.mobileObj = { ...res.data.data, stateDesc: '正在检测' }
+                if (testCounts === fileCounts) {
+                  this.mobileObj = { ...res.data.data, stateDesc: '文件解析中' }
+                } else {
+                  this.mobileObj = { ...res.data.data, stateDesc: '正在检测' }
+                }
               }
+              if (type === 'fromMounted') {
+                this.dialogIndex = 2
+              }
+              this.fileRows = res.data.data.fileCounts
+              this.loopTestProcess(4000)
+            } else if (res.data.code === 999979) {
+              // debugger
+              // 检测完成
+              this.fileInfObj = {}
+              // this.dialogIndex = 4
+              this.countryCodeDisabled = false
+              ss.remove('internationalTestingID')
+              ss.remove('internationalTestingsendID')
+              ss.remove('countryCodeValue')
+              ss.remove('internationalTestingRows')
+              this.handleDoneDown(type)
+            } else {
+              // 检测失败
+              this.dialogIndex = 0
+              this.$message.warning(res.data.msg)
+              this.countryCodeDisabled = false
+              ss.remove('internationalTestingID')
+              ss.remove('internationalTestingsendID')
+              ss.remove('countryCodeValue')
+              ss.remove('internationalTestingRows')
             }
-            if (type === 'fromMounted') {
-              this.dialogIndex = 2
-            }
-            this.fileRows = res.data.data.fileCounts
-            this.loopTestProcess(4000)
-          } else if (res.data.code === 999979) {
-            // debugger
-            // 检测完成
+          })
+          .catch(() => {
             this.fileInfObj = {}
-            // this.dialogIndex = 4
-            this.countryCodeDisabled = false
-            ss.remove('internationalTestingID')
-            ss.remove('internationalTestingsendID')
-            ss.remove('countryCodeValue')
-            ss.remove('internationalTestingRows')
-            this.handleDoneDown(type)
-          } else {
-            // 检测失败
-            this.dialogIndex = 0
-            this.$message.warning(res.data.msg)
-            this.countryCodeDisabled = false
-            ss.remove('internationalTestingID')
-            ss.remove('internationalTestingsendID')
-            ss.remove('countryCodeValue')
-            ss.remove('internationalTestingRows')
-          }
-        })
-        .catch(() => {
-          this.fileInfObj = {}
-          this.loopTestProcess(4000)
-        })
+            this.loopTestProcess(4000)
+          })
+      }
     },
     // 循环数据检测进度
     loopTestProcess(times) {
