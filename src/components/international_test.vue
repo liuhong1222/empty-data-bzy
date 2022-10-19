@@ -112,7 +112,7 @@
       append-to-body
     >
       <template slot="title">
-        <span>实时检测</span>
+        <span>国际号码检测</span>
         <button
           type="button"
           class="el-dialog__headerbtn"
