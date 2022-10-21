@@ -1,12 +1,13 @@
 <template>
   <section>
-    <div class="international-test" ref="fixedView">
+    <div class="direct-test" ref="fixedView">
       <div>
         <el-select
-          v-model="typeValue"
+          v-model="productType"
           :disabled="typeDisabled"
           placeholder="请选择类型（必选）"
           class="country-code"
+          @change="handleTypeChange"
         >
           <el-option
             v-for="item in typeList"
@@ -56,12 +57,12 @@
             <div
               v-else
               class="file-butt file-butt-select"
-              @click="browseButt($event, 'internationalSinglefile')"
+              @click="browseButt($event, 'directSinglefile')"
             >
               浏览
             </div>
           </div>
-          <div if="stepIndex > 0" class="international-handle-regin">
+          <div if="stepIndex > 0" class="direct-handle-regin">
             <el-progress
               v-if="stepIndex == 2"
               :text-inside="true"
@@ -92,8 +93,8 @@
         <input
           class="file-hidden"
           name="empty"
-          ref="internationalSinglefile"
-          id="internationalSinglefile"
+          ref="directSinglefile"
+          id="directSinglefile"
           type="file"
           accept="text/plain,application/vnd.ms-excel"
           @change="singlefilePreview($event)"
@@ -122,54 +123,6 @@
     >
       <img height="30" src="../assets/img/loading.png" />
       <p>文件读取中，请勿离开...</p>
-    </el-dialog>
-    <el-dialog
-      width="880px"
-      custom-class="dialog-reset dialog-conduct"
-      :show-close="false"
-      :visible="dialogIndex == 2"
-      append-to-body
-    >
-      <template slot="title">
-        <span>国际号码检测</span>
-        <button
-          type="button"
-          class="el-dialog__headerbtn"
-          @click="dialogIndex = 0"
-        >
-          <i class="el-dialog__close el-icon el-icon-close"></i>
-        </button>
-      </template>
-      <div class="loading-regin">
-        <div class="loading1" :style="testingPosition">{{ testingScale }}%</div>
-        <div class="loading2">
-          <img width="100%" src="../assets/img/circle1.png" />
-        </div>
-        <div class="loading3">
-          <img width="100%" src="../assets/img/circle2.png" />
-        </div>
-        <div class="loading4">
-          <img width="100%" src="../assets/img/circle3.png" />
-        </div>
-      </div>
-      <div class="conduct-scaling">
-        <span>{{ mobileObj['stateDesc'] }}</span
-        >({{ mobileObj['testCounts'] }}/{{ mobileObj['fileCounts'] }})
-      </div>
-      <ul class="conduct-order">
-        <li
-          v-for="(item, index) in mobileObj['mobileList']"
-          :class="item.color"
-          :key="index"
-        >
-          <span>{{ item.mobile }}</span>
-          <i v-if="item['color'] == 'red'" class="el-icon-warning"></i>
-          <i v-else-if="item['color'] == 'blue'" class="el-icon-success"></i>
-          <i v-else-if="item['color'] == 'gray'" class="el-icon-error"></i>
-          <i v-else-if="item['color'] == 'yellow'" class="el-icon-question"></i>
-        </li>
-      </ul>
-      <p class="conduct-remarks">无需等待，系统后台自动执行......</p>
     </el-dialog>
     <el-dialog
       width="450px"
@@ -280,12 +233,13 @@ export default {
           label: 'line'
         }
       ],
-      typeValue: undefined, // 选中的类型
-      typeDisabled: false // 检测时不可选择类型
+      productType: undefined, // 选中的类型
+      typeDisabled: false, // 检测时不可选择类型
+      directBalance: 0 // 定向检测余额
     }
   },
   head() {
-    return { title: '国际号码检测' }
+    return { title: '定向检测' }
   },
   computed: {
     testingScale() {
@@ -319,32 +273,7 @@ export default {
   },
   mounted() {
     this.getCountryCode()
-    try {
-      const internationalTestingID = ss.get('internationalTestingID')
-      const countryCodeValue = ss.get('countryCodeValue')
-      const internationalTestingRows = ss.get('internationalTestingRows')
-      if (internationalTestingID) {
-        this.fileInfObj = {
-          id: internationalTestingID,
-          minshow: true
-        }
-        this.countryCodeValue = countryCodeValue
-        this.countryCodeDisabled = true
-        this.getTestProcessMobile('fromMounted')
-      }
-      if (internationalTestingRows) {
-        this.fileRows = internationalTestingRows
-      }
-    } catch (err) {
-      this.fileInfObj = {
-        id: null,
-        minshow: false
-      }
-      this.countryCodeDisabled = false
-      ss.remove('internationalTestingID')
-      ss.remove('countryCodeValue')
-      ss.remove('internationalTestingRows')
-    }
+    this.directBalance = this.personalInfo.directCommonBalance
   },
   methods: {
     // 获取国码列表
@@ -372,6 +301,12 @@ export default {
         return
       }
 
+      if (!this.productType) {
+        event.preventDefault()
+        this.$message.error('请先选择类型')
+        return
+      }
+
       if (!this.countryCodeValue) {
         event.preventDefault()
         this.$message.error('请先选择国码')
@@ -387,7 +322,7 @@ export default {
               source: {
                 url: 'empty',
                 type: dom,
-                balance: this.personalInfo.internationalBalance
+                balance: this.directBalance
               },
               flag: true
             })
@@ -406,9 +341,9 @@ export default {
       } else {
         // 判断余额
         if (
-          !this.personalInfo.internationalBalance ||
-          this.personalInfo.internationalBalance === '0' ||
-          this.personalInfo.internationalBalance < 0
+          !this.directBalance ||
+          this.directBalance === '0' ||
+          this.directBalance < 0
         ) {
           this.$message.error('余额不足')
           return
@@ -422,16 +357,16 @@ export default {
       const file = target.files[0]
       if (file.size === 0) {
         this.$message.error('上传文件有误，请重新上传！')
-        this.$refs.internationalSingleFile.value = ''
+        this.$refs.directSingleFile.value = ''
         return
       }
       if (file) {
         if (file.name.substr(-4) !== '.txt') {
           this.$message.warning('仅支持txt文件')
-          this.$refs.internationalSingleFile.value = ''
+          this.$refs.directSingleFile.value = ''
         } else if (file.size >= 31457280) {
           this.$message.warning('文件大小不能超过30M')
-          this.$refs.internationalSingleFile.value = ''
+          this.$refs.directSingleFile.value = ''
         } else {
           this.fileObj = file || {}
           this.uploadAxios(file)
@@ -470,22 +405,20 @@ export default {
       const testForm = new FormData()
       testForm.append(
         'fileId',
-        this.checkId || ss.get('internationalTestingID')
+        this.checkId || ss.get('directTestingID')
       )
       testForm.append('countryCode', this.countryCodeValue)
+      testForm.append('productType', this.productType)
       this.$http
-        .post('/front/international/checkByFile ', testForm)
+        .post('/front/intDirect/checkByFile', testForm)
         .then((res) => {
           if (res.data.code === 200) {
-            // 请求成功，关闭定时器
-            clearInterval(this.timersecond)
-            this.testingSuccess(
-              res.data.data.runCount ? res.data.data.runCount : 3
-            )
-            ss.set('internationalTestingID', res.data.data.code)
-            sessionStorage.setItem('countryCodeValue', this.countryCodeValue)
-            ss.set('internationalTestingRows', this.fileRows)
-            this.countryCodeDisabled = true
+            this.dialogIndex = ''
+            this.$message.success('文件检测成功，请查看检测记录表格')
+            this.countryCodeValue = ''
+            this.productType = ''
+            this.resetFrom()
+            this.$emit('testSuccess', 'directPosition')
           } else {
             this.dialogIndex = ''
             this.$message.warning(res.data.msg)
@@ -496,95 +429,6 @@ export default {
           this.$message.error('检测失败')
           this.resetFrom()
         })
-    },
-    // 缓冲后台数据读取延迟
-    testingSuccess({ runCount = 3 }) {
-      // console.log(runCount)
-      this.timersecond = setInterval(() => {
-        runCount--
-        if (runCount <= 0) {
-          this.dialogIndex = 2
-          this.getTestProcessMobile()
-          this.fileInfObj.minshow = true
-          clearInterval(this.timersecond)
-        }
-      }, 4000)
-    },
-    //  200进行中，999979已完成
-    getTestProcessMobile(type) {
-      const testForm = new FormData()
-      let fileId = this.checkId || ss.get('internationalTestingID')
-      testForm.append('fileId', fileId)
-      // 当id为空时，则不再调此方法
-      if (fileId) {
-        this.$http
-          .post('/front/intDirect/getTestProcessMobile', testForm)
-          .then((res) => {
-            if (res.data.code === 200) {
-              // 检测中
-              const { testCounts = '36', fileCounts } = res.data.data || {}
-              if (testCounts === '36') {
-                this.mobileObj = {
-                  ...res.data.data,
-                  testCounts: '0',
-                  stateDesc: '准备检测'
-                }
-              } else {
-                if (testCounts === fileCounts) {
-                  this.mobileObj = { ...res.data.data, stateDesc: '文件解析中' }
-                } else {
-                  this.mobileObj = { ...res.data.data, stateDesc: '正在检测' }
-                }
-              }
-              if (type === 'fromMounted') {
-                this.dialogIndex = 2
-              }
-              this.fileRows = res.data.data.fileCounts
-              this.loopTestProcess(4000)
-            } else if (res.data.code === 999979) {
-              // debugger
-              // 检测完成
-              this.fileInfObj = {}
-              // this.dialogIndex = 4
-              this.countryCodeDisabled = false
-              ss.remove('internationalTestingID')
-              ss.remove('countryCodeValue')
-              ss.remove('internationalTestingRows')
-              this.handleDoneDown(type)
-            } else {
-              // 检测失败
-              this.dialogIndex = 0
-              this.$message.warning(res.data.msg)
-              this.countryCodeDisabled = false
-              ss.remove('internationalTestingID')
-              ss.remove('countryCodeValue')
-              ss.remove('internationalTestingRows')
-            }
-          })
-          .catch(() => {
-            this.fileInfObj = {}
-            this.loopTestProcess(4000)
-          })
-      }
-    },
-    // 循环数据检测进度
-    loopTestProcess(times) {
-      this.timersecond = setTimeout(() => {
-        this.getTestProcessMobile()
-      }, times)
-    },
-    // 完成倒计时
-    handleDoneDown(type) {
-      this.dialogIndex = 4
-      clearInterval(this.timersecond)
-      this.fileInfObj.minshow = false
-      this.resetFrom()
-      this.countryCodeValue = ''
-      this.countryCodeDisabled = false
-      // 获取最新数据
-      this.$emit('testSuccess')
-      // }
-      // }, 4000)
     },
     // 重置文件选择
     resetFrom() {
@@ -609,7 +453,7 @@ export default {
         mergeFile: '/front/chunk/uploadStatus',
         customerId: this.personalInfo.id,
         pieceSize: 0.25,
-        productCodeType: 'international', // 0-空号检测  1-实时检测 2-国际号码检测
+        productCodeType: 'direct', // 0-空号检测  1-实时检测 2-定向检测
         success: (data) => {
           console.log('文件上传成功--------' + data)
           if (data.code === 200) {
@@ -674,6 +518,16 @@ export default {
           this.processButtonClick(formData, index + 1)
         }, 500)
       }
+    },
+    // 选择类型
+    handleTypeChange (value) {
+      console.log(value)
+      if (value === 'line') {
+        this.directBalance = this.personalInfo.lineDirectBalance
+      } else {
+        this.directBalance = this.personalInfo.directCommonBalance
+      }
+      console.log(this.directBalance)
     }
   },
   beforeDestroy() {
@@ -684,7 +538,7 @@ export default {
 </script>
 
 <style lang="scss">
-.international-test {
+.direct-test {
   min-height: 100px;
   position: relative;
   .country-code {
@@ -741,7 +595,7 @@ export default {
     background-color: #999;
   }
 }
-.international-handle-regin {
+.direct-handle-regin {
   padding-top: 15px;
   width: 650px;
 

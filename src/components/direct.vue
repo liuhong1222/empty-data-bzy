@@ -168,18 +168,16 @@
                 </p>
                 <p class="result-size">
                   {{
-                    newInternational.已激活号 ||
-                    newInternational.activeNumber ||
+                    newDirect.activeNumber ||
                     0
                   }}
                 </p>
                 <el-button
                   size="medium"
                   :disabled="
-                    !newInternational.已激活号url &&
-                    !newInternational.activeFilePath
+                    !newDirect.activeFilePath
                   "
-                  @click="downloadPro(newInternational.activeFilePath)"
+                  @click="downloadPro(newDirect.activeFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -200,18 +198,16 @@
                 </p>
                 <p class="result-size">
                   {{
-                    newInternational.未注册 ||
-                    newInternational.unknownNumber ||
+                    newDirect.noRegisterNumber ||
                     0
                   }}
                 </p>
                 <el-button
                   size="medium"
                   :disabled="
-                    !newInternational.未注册url &&
-                    !newInternational.unknownFilePath
+                    !newDirect.noRegisterFilePath
                   "
-                  @click="downloadPro(newInternational.unknownFilePath)"
+                  @click="downloadPro(newDirect.noRegisterFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -232,8 +228,8 @@
                 :disabled="!isDownloadAll"
                 @click="
                   downloadZip(
-                    newInternational,
-                    newInternational.zip_url || newInternational.zipPath
+                    newDirect,
+                    newDirect.zip_url || newDirect.zipPath
                   )
                 "
                 class="button"
@@ -245,7 +241,7 @@
       </el-col>
     </el-row>
     <!-- 历史检测 -->
-    <el-row :span="24" style="margin-top: 20px">
+    <el-row :span="24" style="margin-top: 20px" id="fromDirectTest">
       <el-col :span="24">
         <el-card class="towcard threecard">
           <div class="title">检测记录</div>
@@ -309,8 +305,7 @@
             border
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="50"></el-table-column>
-            <!-- // ? 产品类型字段名 -->
+            <el-table-column type="selection" width="50" :selectable="checkTableBoolean"></el-table-column>
             <el-table-column prop="productType" label="产品类型" width="100"></el-table-column>
             <el-table-column prop="name" label="名称" width="160">
               <template slot-scope="scope">
@@ -346,25 +341,25 @@
                   @click="
                     downloadTxt(scope.row, '已激活.txt', 'activeFilePath')
                   "
-                  >{{ scope.row.activeNumber || 0 }}</a
+                  >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.activeNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
-            <el-table-column prop="unknownNumber" label="未注册">
+            <el-table-column prop="noRegisterNumber" label="未注册">
               <template slot-scope="scope">
                 <a
                   :style="{
                     'pointer-events':
-                      !scope.row.unknownNumber ||
-                      scope.row.unknownNumber == '0'
+                      !scope.row.noRegisterNumber ||
+                      scope.row.noRegisterNumber == '0'
                         ? 'none'
                         : 'auto'
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '未注册.txt', 'unknownFilePath')
+                    downloadTxt(scope.row, '未注册.txt', 'noRegisterFilePath')
                   "
-                  >{{ scope.row.unknownNumber || 0 }}</a
+                  >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.noRegisterNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
@@ -372,8 +367,24 @@
               prop="totalNumber"
               label="总条数"
             ></el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
+            <el-table-column
+              prop="checkStatus"
+              label="检测状态"
+            >
               <template slot-scope="scope">
+                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : '#34C38B'}">{{scope.row.checkStatus === 0 ? '正在检测中' : '检测完成'}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="checkProcess"
+              label="检测进度"
+            >
+              <template slot-scope="scope">
+                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : 'rgba(0, 0, 0, 0.65)'}">{{scope.row.checkProcess}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100" fixed="right">
+              <template slot-scope="scope" v-if="scope.row.checkStatus === 1">
                 <el-button
                   type="text"
                   size="mini"
@@ -486,18 +497,7 @@ export default {
         waiting: '等待',
         cmd5: 'cmd5'
       },
-      newInternational: {
-        正常号: 0,
-        空号: 0,
-        通话中: 0,
-        在网不可用: 0,
-        关机: 0,
-        呼叫转移: 0,
-        疑似关机: 0,
-        停机: 0,
-        携号转网: 0,
-        查询失败: 0
-      }, // 最新一条检测记录
+      newDirect: {}, // 最新一条检测记录
       fileList: [], // 上传文件数组
       result: [],
       flieAlllist: [],
@@ -512,7 +512,7 @@ export default {
       text: ls.get('text'),
       uploadListShow: false, // 文件上传弹窗是否展示
       isDownloadAll: false, // 是否可以一键下载全部
-      productVal: '', // 国际定向检测产品下拉框选中值
+      productVal: undefined, // 国际定向检测产品下拉框选中值
       productList: [ // 'viber', 'zalo', 'botim', 'line'
         {
           value: '',
@@ -552,11 +552,18 @@ export default {
       return formatSize + 'KB'
     },
     // 检测成功
-    testSuccess() {
+    testSuccess(value) {
       // debugger
       this.getData()
       this.getLatestEmpty()
-      this.getInternationalPageList()
+      this.getDirectPageList()
+      if (value && value === 'directPosition') {
+        // 定向检测-立即检测接口成功-锚点跳转到表格模块
+        const anchorEle = document.querySelector('#fromDirectTest')
+        if (anchorEle) {
+          anchorEle.scrollIntoView(true)
+        }
+      }
     },
     async getData() {
       const { data } = await this.$http.get('front/personal/personalInfo')
@@ -564,9 +571,9 @@ export default {
       this.personalInfo = data.data
       this.queryInfo.customerId = JSON.parse(ss.get('customer')).id
     },
-    async getInternationalStatisticalData() {
+    async getDirectStatisticalData() {
       // const { data } = await this.$http.get(
-      //   'front/international/getInternationalStatisticalData'
+      //   'front/direct/getDirectStatisticalData'
       // )
       // if (data.code !== 200) return this.$message.error(data.msg)
       // this.statisticalData = data.data
@@ -719,9 +726,9 @@ export default {
         if (data.code !== 200) return this.$message.error(data.msg)
         this.result.push(data.data)
         if (this.fileList.length === this.result.length) {
-          // this.$store.commit('setInternationalResult', this.result)
+          // this.$store.commit('setDirectResult', this.result)
           this.getLatestEmpty()
-          this.getInternationalPageList()
+          this.getDirectPageList()
           ls.set('text', '继续检测')
           this.text = '继续检测'
           this.loading = true
@@ -737,7 +744,7 @@ export default {
         this.$message.warning('已设置解压密码，无法直接下载单个文件')
         return
       }
-      let _url = `${this.downloadDomain}international/${url}`
+      let _url = `${this.downloadDomain}direct/${url}`
       window.open(_url)
     },
     // 获取最新一条检测结果
@@ -748,10 +755,13 @@ export default {
       if (data.code !== 200) return this.$message.error(data.msg)
       if (data.data == null) return
       this.isDownloadAll = true
-      this.newInternational = data.data
+      this.newDirect = data.data
     },
     // 获取检测记录
-    async getInternationalPageList() {
+    async getDirectPageList() {
+      if (this.queryInfo.productType === '') {
+        this.queryInfo.productType = undefined
+      }
       const { data } = await this.$http.post(
         'front/intDirect/getIntDirectPageList',
         this.queryInfo
@@ -772,8 +782,8 @@ export default {
       }
       this.queryInfo.page = 1
       this.queryInfo.size = this.currentSize
-      this.queryInfo.productType = this.productVal
-      this.getInternationalPageList()
+      this.queryInfo.productType = this.productVal ? this.productVal : undefined
+      this.getDirectPageList()
     },
     // 表格选项变化触发
     handleSelectionChange(arr) {
@@ -792,11 +802,11 @@ export default {
         this.selectData.forEach((item) => {
           let url
           if (item.isOldData) {
-            url = `${this.batchDownload}/international/${item.customerId}/${
+            url = `${this.batchDownload}/direct/${item.customerId}/${
               item.id
             }/${item.name + '.zip'}`
           } else {
-            url = `${this.batchDownload}/international/${item.zipPath}`
+            url = `${this.batchDownload}/direct/${item.zipPath}`
           }
           // console.log(url)
           const promise = getFile(encodeURI(url)).then((data) => {
@@ -828,14 +838,14 @@ export default {
       if (isOldData) {
         if (_url !== ' ') {
           // 此处下载全部直接使用返回URL
-          url = `${this.downloadDomain}international/${_url}`
+          url = `${this.downloadDomain}direct/${_url}`
         } else {
-          url = `${this.downloadDomain}international/${customerId}/${id}/${
+          url = `${this.downloadDomain}direct/${customerId}/${id}/${
             name + '.zip'
           }`
         }
       } else {
-        url = `${this.downloadDomain}international/${zipPath}`
+        url = `${this.downloadDomain}direct/${zipPath}`
       }
       this.downloadfunc(url)
     },
@@ -876,9 +886,9 @@ export default {
       )
       let url
       if (isOldData) {
-        url = `${this.downloadDomain}international/${customerId}/${id}/${names}`
+        url = `${this.downloadDomain}direct/${customerId}/${id}/${names}`
       } else {
-        url = `${this.downloadDomain}international/${rows[newUrl]}`
+        url = `${this.downloadDomain}direct/${rows[newUrl]}`
       }
       // console.log(url)
 
@@ -916,7 +926,7 @@ export default {
             `front/intDirect/delete/${item.id}`
           )
           if (data.code !== 200) return this.$message.error('删除失败')
-          this.getInternationalPageList()
+          this.getDirectPageList()
           this.getLatestEmpty()
         })
         this.$message.success('删除成功')
@@ -925,11 +935,11 @@ export default {
     handleSizeChange(newSize) {
       this.currentSize = newSize
       this.queryInfo.size = newSize
-      this.getInternationalPageList()
+      this.getDirectPageList()
     },
     handleCurrentChange(newCurrent) {
       this.queryInfo.page = newCurrent
-      this.getInternationalPageList()
+      this.getDirectPageList()
     },
     changeRadio() {
       this.isUploadOk = true
@@ -946,18 +956,24 @@ export default {
     handlePictureCardPreview(url) {
       this.dialogImageUrl = this.downloadDomain + url
       this.dialogVisible = true
+    },
+    // 判断表格是否可被勾选
+    checkTableBoolean(row) {
+      if (row.checkStatus === 0) {
+        return 0
+      } else {
+        return 1
+      }
     }
   },
   mounted() {
     this.getData()
-    this.getInternationalStatisticalData()
+    this.getDirectStatisticalData()
     this.getContractInfo()
     this.getLatestEmpty()
-    this.getInternationalPageList()
+    this.getDirectPageList()
     ls.set('text', '开始检测')
     this.getCertified()
-    // this.result = this.$store.state.internationalResult
-    // console.log(this.$http.defaults.baseURL)
   }
 }
 </script>
