@@ -43,6 +43,11 @@ const routes = [
         component: () => import('../components/International.vue')
       }, // 国际号码检测
       {
+        path: 'direct',
+        name: 'direct',
+        component: () => import('../components/international_direct.vue')
+      }, // 国际定向检测
+      {
         path: 'matching',
         name: 'Matching',
         component: () => import('../components/Matching.vue')

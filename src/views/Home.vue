@@ -118,6 +118,10 @@
               <i class="el-icon-bangzhu gj-icon"></i>
               <span slot="title">国际号码检测</span>
             </el-menu-item>
+            <el-menu-item index="/direct">
+              <i class="el-icon-circle-plus-outline gj-icon"></i>
+              <span slot="title">国际定向检测</span>
+            </el-menu-item>
             <!-- <el-menu-item index="/emptyapi">
             <i class="iconfont iconshendujiance"></i>
             <span slot="title">空号检测API</span>
@@ -288,6 +292,7 @@ export default {
           '/realtime',
           '/emptyrealapi',
           '/international',
+          '/direct',
           '/matching'
         ]
         if (arr.indexOf(route.path) > -1) {
