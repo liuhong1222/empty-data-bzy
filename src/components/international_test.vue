@@ -484,8 +484,8 @@ export default {
       let sendID = this.sendID || ss.get('internationalTestingsendID')
       testForm.append('fileId', fileId)
       testForm.append('sendID', sendID)
-      // 当id为空时，则不再调此方法
-      if (fileId && sendID) {
+      // 当id为空时，则不再调此方法，sendID改为非必须
+      if (fileId) {
         this.$http
           .post('/front/international/getTestProcessMobile', testForm)
           .then((res) => {
