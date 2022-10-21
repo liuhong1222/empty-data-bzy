@@ -182,7 +182,7 @@
                 <p class="result-size">
                   {{
                     newInternational.未激活 ||
-                    newInternational.notActiveNumber ||
+                    newInternational.noRegisterNumber ||
                     0
                   }}
                 </p>
@@ -190,9 +190,9 @@
                   size="medium"
                   :disabled="
                     !newInternational.未激活url &&
-                    !newInternational.notActiveFilePath
+                    !newInternational.noRegisterFilePath
                   "
-                  @click="downloadPro(newInternational.notActiveFilePath)"
+                  @click="downloadPro(newInternational.noRegisterFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -214,7 +214,7 @@
                 <p class="result-size">
                   {{
                     newInternational.未注册 ||
-                    newInternational.noRegisterNumber ||
+                    newInternational.unknownNumber ||
                     0
                   }}
                 </p>
@@ -222,9 +222,9 @@
                   size="medium"
                   :disabled="
                     !newInternational.未注册url &&
-                    !newInternational.noRegisterFilePath
+                    !newInternational.unknownFilePath
                   "
-                  @click="downloadPro(newInternational.noRegisterFilePath)"
+                  @click="downloadPro(newInternational.unknownFilePath)"
                   class="button"
                   >下载</el-button
                 >
@@ -351,38 +351,38 @@
                 >
               </template>
             </el-table-column>
-            <el-table-column prop="activeNumber" label="未激活">
+            <el-table-column prop="noRegisterNumber" label="未激活">
               <template slot-scope="scope">
                 <a
                   :style="{
                     'pointer-events':
-                      !scope.row.notActiveNumber || scope.row.notActiveNumber == '0'
+                      !scope.row.noRegisterNumber || scope.row.noRegisterNumber == '0'
                         ? 'none'
                         : 'auto'
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '未激活.txt', 'notActiveFilePath')
+                    downloadTxt(scope.row, '未激活.txt', 'noRegisterFilePath')
                   "
-                  >{{ scope.row.notActiveNumber || 0 }}</a
+                  >{{ scope.row.noRegisterNumber || 0 }}</a
                 >
               </template>
             </el-table-column>
-            <el-table-column prop="noRegisterNumber" label="未注册">
+            <el-table-column prop="unknownNumber" label="未注册">
               <template slot-scope="scope">
                 <a
                   :style="{
                     'pointer-events':
-                      !scope.row.noRegisterNumber ||
-                      scope.row.noRegisterNumber == '0'
+                      !scope.row.unknownNumber ||
+                      scope.row.unknownNumber == '0'
                         ? 'none'
                         : 'auto'
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '未注册.txt', 'noRegisterFilePath')
+                    downloadTxt(scope.row, '未注册.txt', 'unknownFilePath')
                   "
-                  >{{ scope.row.noRegisterNumber || 0 }}</a
+                  >{{ scope.row.unknownNumber || 0 }}</a
                 >
               </template>
             </el-table-column>
@@ -1323,6 +1323,9 @@ export default {
       width: 300px;
       height: 34px;
       line-height: 32px;
+    }
+    .product-input {
+      margin: 0 15px;
     }
   }
 }
