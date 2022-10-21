@@ -239,7 +239,6 @@ export default {
       fileRows: 0, // 条数
       fileInfObj: {
         id: null,
-        sendID: null,
         minshow: false
       },
       stepIndex: 0,
@@ -322,13 +321,11 @@ export default {
     this.getCountryCode()
     try {
       const internationalTestingID = ss.get('internationalTestingID')
-      const internationalTestingsendID = ss.get('internationalTestingsendID')
       const countryCodeValue = ss.get('countryCodeValue')
       const internationalTestingRows = ss.get('internationalTestingRows')
       if (internationalTestingID) {
         this.fileInfObj = {
           id: internationalTestingID,
-          sendID: internationalTestingsendID,
           minshow: true
         }
         this.countryCodeValue = countryCodeValue
@@ -341,12 +338,10 @@ export default {
     } catch (err) {
       this.fileInfObj = {
         id: null,
-        sendID: null,
         minshow: false
       }
       this.countryCodeDisabled = false
       ss.remove('internationalTestingID')
-      ss.remove('internationalTestingsendID')
       ss.remove('countryCodeValue')
       ss.remove('internationalTestingRows')
     }
@@ -488,7 +483,6 @@ export default {
               res.data.data.runCount ? res.data.data.runCount : 3
             )
             ss.set('internationalTestingID', res.data.data.code)
-            ss.set('internationalTestingsendID', res.data.data.sendID)
             sessionStorage.setItem('countryCodeValue', this.countryCodeValue)
             ss.set('internationalTestingRows', this.fileRows)
             this.countryCodeDisabled = true
@@ -520,11 +514,9 @@ export default {
     getTestProcessMobile(type) {
       const testForm = new FormData()
       let fileId = this.checkId || ss.get('internationalTestingID')
-      let sendID = this.sendID || ss.get('internationalTestingsendID')
       testForm.append('fileId', fileId)
-      testForm.append('sendID', sendID)
       // 当id为空时，则不再调此方法
-      if (fileId && sendID) {
+      if (fileId) {
         this.$http
           .post('/front/intDirect/getTestProcessMobile', testForm)
           .then((res) => {
@@ -556,7 +548,6 @@ export default {
               // this.dialogIndex = 4
               this.countryCodeDisabled = false
               ss.remove('internationalTestingID')
-              ss.remove('internationalTestingsendID')
               ss.remove('countryCodeValue')
               ss.remove('internationalTestingRows')
               this.handleDoneDown(type)
@@ -566,7 +557,6 @@ export default {
               this.$message.warning(res.data.msg)
               this.countryCodeDisabled = false
               ss.remove('internationalTestingID')
-              ss.remove('internationalTestingsendID')
               ss.remove('countryCodeValue')
               ss.remove('internationalTestingRows')
             }
