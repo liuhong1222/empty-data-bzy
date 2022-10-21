@@ -449,6 +449,10 @@ export default {
             if (item.category === 1) this.goodlist.push(item)
           } else if (this.type === '国际号码检测') {
             if (item.category === 2) this.goodlist.push(item)
+          } else if (this.type === '定向通用检测') {
+            if (item.category === 4) this.goodlist.push(item)
+          } else if (this.type === 'line定向检测') {
+            if (item.category === 5) this.goodlist.push(item)
           }
         } else if (item.type === 1) {
           if (this.type === '空号检测') {
@@ -463,6 +467,16 @@ export default {
             }
           } else if (this.type === '国际号码检测') {
             if (item.category === 2) {
+              this.zdy.id = item.id
+              this.custom = item
+            }
+          } else if (this.type === '定向通用检测') {
+            if (item.category === 4) {
+              this.zdy.id = item.id
+              this.custom = item
+            }
+          } else if (this.type === 'line定向检测') {
+            if (item.category === 5) {
               this.zdy.id = item.id
               this.custom = item
             }
@@ -532,6 +546,12 @@ export default {
         case '国际号码检测':
           this.$router.push('/international')
           break
+        case '定向通用检测':
+          this.$router.push('/direct')
+          break
+        case 'line定向检测':
+          this.$router.push('/direct')
+          break
         default:
           break
       }
@@ -564,6 +584,8 @@ export default {
                 ? '实时查询'
                 : this.type === '2'
                 ? '国际号码检测'
+                : this.type === '4' || this.type === '5'
+                ? '国际定向检测'
                 : ''
             }页面`
           )

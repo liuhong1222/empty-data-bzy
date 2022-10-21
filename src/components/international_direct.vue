@@ -13,22 +13,41 @@
       <el-col :span="8">
         <el-card class="_el-card">
           <div class="onecard">
-            <div class="left-block">
-              <div class="count">{{ personalInfo.internationalBalance }}</div>
+            <div class="balance-info">
+              <p class="title">定向通用检测</p>
+              <p class="count">{{ personalInfo.directCommonBalance }}</p>
               <div class="des">
                 账户总余额<span class="unit">（ 条 ）</span>
               </div>
+              <div>
+                <el-button
+                  type="danger"
+                  size="small"
+                  icon="iconfont iconchongzhi"
+                  class="button recharge-btn"
+                  @click="goRecharge('定向通用检测')"
+                >
+                  充值</el-button
+                >
+              </div>
             </div>
-            <div>
-              <el-button
-                type="danger"
-                size="small"
-                icon="iconfont iconchongzhi"
-                class="button recharge-btn"
-                @click="goRecharge('国际定向检测')"
-              >
-                充值</el-button
-              >
+            <div class="balance-info">
+              <p class="title">line定向检测</p>
+              <p class="count">{{ personalInfo.lineDirectBalance }}</p>
+              <div class="des">
+                账户总余额<span class="unit">（ 条 ）</span>
+              </div>
+              <div>
+                <el-button
+                  type="danger"
+                  size="small"
+                  icon="iconfont iconchongzhi"
+                  class="button recharge-btn"
+                  @click="goRecharge('line定向检测')"
+                >
+                  充值</el-button
+                >
+              </div>
             </div>
           </div>
         </el-card>
@@ -1053,37 +1072,33 @@ export default {
     }
     .onecard {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      .left-block {
-        margin: 15px 0;
-        font-size: 12px;
+      .balance-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .title {
+        font-size: 16px;
+        margin-top: -5px;
+      }
+      .count {
+        margin: 0;
+        font-size: 24px;
         color: #595e7b;
-        .count {
-          margin: 0;
-          font-size: 24px;
-          color: #595e7b;
-          margin-bottom: 10px;
-          font-weight: bold;
-        }
-        .des {
-          color: #878998;
-          .unit {
-            color: #649eff;
-          }
+        font-weight: bold;
+        margin: 5px 0;
+      }
+      .des {
+        color: #878998;
+        .unit {
+          color: #649eff;
         }
       }
-      .right-block {
-        .rate {
-          color: #47d0d8;
-        }
-        .red {
-          color: #f56c6c;
-        }
-        .contrast {
-          color: #b6b7c9;
-          margin-top: 10px;
-        }
+      .recharge-btn {
+        margin-top: 5px;
       }
     }
     .container {
