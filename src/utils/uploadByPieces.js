@@ -128,6 +128,8 @@ export const uploadByPieces = ({
         fetchForm.append('fileType ', 1) // 实时
       } else if (productCodeType === 'international') {
         fetchForm.append('fileType ', 2) // 国际
+      } else if (productCodeType === 'direct') {
+        fetchForm.append('fileType ', 3) // 定向
       }
 
       Vue.prototype.$http
@@ -172,6 +174,8 @@ export const uploadByPieces = ({
         fetchForm.append('fileType ', 1) // 实时
       } else if (productCodeType === 'international') {
         fetchForm.append('fileType ', 2) // 国际
+      } else if (productCodeType === 'direct') {
+        fetchForm.append('fileType ', 3) // 定向
       }
 
       Vue.prototype.$http
@@ -280,6 +284,9 @@ export const uploadByPieces = ({
     } else if (productCodeType === 'international') {
       statusForm.append('productCode', 2) // 国际
       statusForm.append('fileType', 2)
+    } else if (productCodeType === 'direct') {
+      statusForm.append('productCode', 3) // 定向
+      statusForm.append('fileType ', 3)
     }
     console.log(statusForm)
     Vue.prototype.$http
