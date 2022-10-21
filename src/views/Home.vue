@@ -63,7 +63,7 @@
             </div>
           </el-popover>
           <span class="rit-span" @click="numberCube">
-            <i class="iconfont iconshoujihaoma" style="margin-right: 0px"></i>
+            <i class="el-icon-download" style="margin-right: 0px"></i>
             号码魔方下载
           </span>
           <div class="name" @mouseenter="showDrop()" @mouseleave="hideDrop()">
