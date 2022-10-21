@@ -153,7 +153,7 @@
         <el-card class="towcard">
           <div class="title">检测结果</div>
           <el-row :span="24">
-            <el-col :span="12" style="width: 33%">
+            <el-col :span="12" style="width: 50%">
               <div class="result-box">
                 <p class="result-title">
                   已激活
@@ -185,39 +185,7 @@
                 >
               </div>
             </el-col>
-            <el-col :span="12" style="width: 33%">
-              <div class="result-box">
-                <p class="result-title">
-                  未激活
-                  <el-popover
-                    placement="right"
-                    width="160"
-                    trigger="hover"
-                    content="未激活"
-                  >
-                    <i class="iconfont iconquestion icon" slot="reference"></i>
-                  </el-popover>
-                </p>
-                <p class="result-size">
-                  {{
-                    newInternational.未激活 ||
-                    newInternational.noRegisterNumber ||
-                    0
-                  }}
-                </p>
-                <el-button
-                  size="medium"
-                  :disabled="
-                    !newInternational.未激活url &&
-                    !newInternational.noRegisterFilePath
-                  "
-                  @click="downloadPro(newInternational.noRegisterFilePath)"
-                  class="button"
-                  >下载</el-button
-                >
-              </div>
-            </el-col>
-            <el-col :span="12" style="width: 33%">
+            <el-col :span="12" style="width: 50%">
               <div class="result-box" style="border-right: none">
                 <p class="result-title">
                   未注册
@@ -379,23 +347,6 @@
                     downloadTxt(scope.row, '已激活.txt', 'activeFilePath')
                   "
                   >{{ scope.row.activeNumber || 0 }}</a
-                >
-              </template>
-            </el-table-column>
-            <el-table-column prop="noRegisterNumber" label="未激活">
-              <template slot-scope="scope">
-                <a
-                  :style="{
-                    'pointer-events':
-                      !scope.row.noRegisterNumber || scope.row.noRegisterNumber == '0'
-                        ? 'none'
-                        : 'auto'
-                  }"
-                  style="cursor: pointer; color: #6799ee"
-                  @click="
-                    downloadTxt(scope.row, '未激活.txt', 'noRegisterFilePath')
-                  "
-                  >{{ scope.row.noRegisterNumber || 0 }}</a
                 >
               </template>
             </el-table-column>
@@ -1319,7 +1270,7 @@ export default {
       width: 1px;
       position: absolute;
       top: -35px;
-      left: 49.5%;
+      left: 50%;
       border-right: 1px solid #e7e7e7;
     }
   }
