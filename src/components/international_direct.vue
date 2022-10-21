@@ -108,7 +108,7 @@
       <el-col :span="24">
         <el-card class="towcard">
           <div class="title">导入号码</div>
-          <international-test
+          <direct-test
             :personal-info="personalInfo"
             :is-certified="isCertified"
             @testSuccess="testSuccess"
@@ -447,7 +447,7 @@ import axios from 'axios'
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 import SparkMD5 from 'spark-md5'
-import InternationalTest from './international_test'
+import DirectTest from './direct_test'
 const getFile = (url) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -465,7 +465,7 @@ const getFile = (url) => {
 }
 
 export default {
-  components: { InternationalTest },
+  components: { DirectTest },
   filters: {
     formatNumber(num) {
       let _num = Number(num) / 1000
@@ -482,7 +482,8 @@ export default {
         size: 10,
         customerId: '',
         createTimeFrom: this.$moment().format('YYYY-MM-DD'),
-        createTimeEnd: this.$moment().format('YYYY-MM-DD')
+        createTimeEnd: this.$moment().format('YYYY-MM-DD'),
+        productType: ''
       },
       currentSize: 10,
       timer: [
@@ -738,7 +739,7 @@ export default {
       }
       this.fileList.map(async (item) => {
         const { data } = await this.$http.post(
-          'front/empty/internationalCheckByFile',
+          'front/intDirect/checkByFile',
           {
             customerId: JSON.parse(ss.get('customer')).id,
             md5: item.uniqueIdentifier,
@@ -772,7 +773,7 @@ export default {
     // 获取最新一条检测结果
     async getLatestEmpty() {
       const { data } = await this.$http.get(
-        'front/international/getLatestInternational'
+        'front/intDirect/getLatestIntDirect'
       )
       if (data.code !== 200) return this.$message.error(data.msg)
       if (data.data == null) return
@@ -782,7 +783,7 @@ export default {
     // 获取检测记录
     async getInternationalPageList() {
       const { data } = await this.$http.post(
-        'front/international/getInternationalPageList',
+        'front/intDirect/getIntDirectPageList',
         this.queryInfo
       )
       if (data.code !== 200) return this.$message.error(data.msg)
@@ -801,6 +802,7 @@ export default {
       }
       this.queryInfo.page = 1
       this.queryInfo.size = this.currentSize
+      this.queryInfo.productType = this.productVal
       this.getInternationalPageList()
     },
     // 表格选项变化触发
@@ -941,7 +943,7 @@ export default {
         if (confirmResult !== 'confirm') return this.$message.info('已取消删除')
         arr.map(async (item) => {
           const { data } = await this.$http.post(
-            `front/international/delete/${item.id}`
+            `front/intDirect/delete/${item.id}`
           )
           if (data.code !== 200) return this.$message.error('删除失败')
           this.getInternationalPageList()
@@ -1355,11 +1357,12 @@ export default {
     }
     .picker {
       margin: 0 15px;
-      width: 300px;
+      width: 240px;
       height: 34px;
       line-height: 32px;
     }
     .product-input {
+      width: 150px;
       margin: 0 15px;
     }
   }
