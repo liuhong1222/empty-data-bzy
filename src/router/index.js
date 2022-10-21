@@ -45,7 +45,7 @@ const routes = [
       {
         path: 'direct',
         name: 'direct',
-        component: () => import('../components/international_direct.vue')
+        component: () => import('../components/direct.vue')
       }, // 国际定向检测
       {
         path: 'matching',
