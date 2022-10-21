@@ -173,9 +173,9 @@
               <el-menu-item-group>
                 <el-menu-item index="/khrecord">空号检测</el-menu-item>
                 <el-menu-item index="/sskecord">实时查询</el-menu-item>
-                <el-menu-item index="/international_record"
-                  >国际号码检测</el-menu-item
-                >
+                <el-menu-item index="/international-record">国际号码检测</el-menu-item>
+                <el-menu-item index="/direct-record">定向通用检测</el-menu-item>
+                <el-menu-item index="/line-direct-record">line定向检测</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>

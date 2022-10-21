@@ -73,10 +73,20 @@ const routes = [
         component: () => import('../components/Sskecord.vue')
       }, // 实时查询记录
       {
-        path: 'international_record',
+        path: 'international-record',
         name: 'InternationalRecord',
         component: () => import('../components/international_record.vue')
       }, // 国际号码检测记录
+      {
+        path: 'direct-record',
+        name: 'DirectRecord',
+        component: () => import('../components/direct_record.vue')
+      }, // 定向通用检测记录
+      {
+        path: 'line-direct-record',
+        name: 'LineDirectRecord',
+        component: () => import('../components/line_direct_record.vue')
+      }, // line定向检测记录
       {
         path: 'recharge',
         name: 'Recharge',
