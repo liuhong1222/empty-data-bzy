@@ -159,7 +159,7 @@
                 >
                   <div class="p-title">国际号码检测</div>
                   <div class="des">
-                    用户上传TXT文件，平台提供对应的号码状态识别反馈，筛选出已激活和未注册的号码
+                    用户上传TXT文件，平台提供对应的号码状态识别反馈，筛选出已激活、未激活和未注册的号码
                   </div>
                 </div>
               </div>
@@ -176,6 +176,39 @@
                     size="small"
                     plain
                     @click="$router.push('/international')"
+                    >查看详情</el-button
+                  >
+                </div>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="product">
+              <div class="left-block">
+                <img src="../assets/img/international_product.svg" alt="" />
+                <div
+                  class="left-block-p"
+                  @click="$router.push('/direct')"
+                >
+                  <div class="p-title">国际定向检测</div>
+                  <div class="des">
+                    用户上传TXT文件，平台提供对应的号码状态识别反馈，筛选出已激活和未注册的号码
+                  </div>
+                </div>
+              </div>
+              <div class="right-block">
+                <div class="right-block-p">
+                  <span class="money">
+                    <!-- 0.001元/条~0.002 元/条 -->
+                    <!--                  <span class="product-listunit">元/条</span>-->
+                  </span>
+                </div>
+                <div class="btn-wrap button">
+                  <el-button
+                    icon="el-icon-right"
+                    size="small"
+                    plain
+                    @click="$router.push('/direct')"
                     >查看详情</el-button
                   >
                 </div>
