@@ -552,8 +552,6 @@ export default {
       this.dialogVisible = true
     },
     submitForm(type) {
-      // console.log(this.AttestationForm)
-      // console.log(this.imagelist)
       if (type === 1 && this.imagelist.length === 0) {
         this.$message.warning('营业执照不能为空')
         return
@@ -585,6 +583,7 @@ export default {
         if (data.code !== 200) return this.$message.error(data.msg)
         this.personalInfo.state = 0
         ss.set('personalInfo', JSON.stringify(this.personalInfo))
+        this.getData()
         this.complete = true
       })
     }
