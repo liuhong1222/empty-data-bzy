@@ -5,7 +5,7 @@
         <el-col :span="24">
           <div class="number-title">
             <div class="i-title">
-              <img src="../assets/img/international_record.svg" />
+              <img src="../assets/img/direct_record.png" />
               <div class="title">line定向检测充值记录</div>
             </div>
           </div>

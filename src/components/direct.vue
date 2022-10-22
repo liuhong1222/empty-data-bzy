@@ -3,7 +3,7 @@
     <el-row :span="24">
       <div class="direct-product-title">
         <div class="i-title">
-          <img src="../assets/img/direct_test.png" />
+          <img src="../assets/img/direct_record.png" />
           <div class="title">国际定向检测</div>
         </div>
       </div>
