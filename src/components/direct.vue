@@ -1,9 +1,9 @@
 <template>
   <div class="empty">
     <el-row :span="24">
-      <div class="product-title">
+      <div class="direct-product-title">
         <div class="i-title">
-          <img src="../assets/img/international_test.svg" />
+          <img src="../assets/img/direct_test.png" />
           <div class="title">国际定向检测</div>
         </div>
       </div>
@@ -979,7 +979,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.product-title {
+.direct-product-title {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -994,8 +994,7 @@ export default {
     height: 28px;
     img {
       margin-right: 10px;
-      width: 28px;
-      height: 28px;
+      height: 26px;
       border-radius: 50%;
     }
     .title {

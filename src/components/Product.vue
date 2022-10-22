@@ -185,7 +185,7 @@
           <el-col :span="12">
             <div class="product">
               <div class="left-block">
-                <img src="../assets/img/international_product.svg" alt="" />
+                <img src="../assets/img/direct_test.png" alt="" />
                 <div
                   class="left-block-p"
                   @click="$router.push('/direct')"
