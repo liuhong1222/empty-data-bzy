@@ -380,7 +380,7 @@
               label="检测进度"
             >
               <template slot-scope="scope">
-                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : 'rgba(0, 0, 0, 0.65)'}">{{scope.row.checkProcess}}</span>
+                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : 'rgba(0, 0, 0, 0.65)'}">{{scope.row.checkProcess}}{{scope.row.checkProcess ? '%' : ''}}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="100" fixed="right">
