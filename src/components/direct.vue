@@ -314,7 +314,7 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="size" label="大小" width="100px">
+            <!-- <el-table-column prop="size" label="大小" width="100px">
               <template slot-scope="scope">
                 {{
                   scope.row.isOldData
@@ -322,7 +322,7 @@
                     : computeFileSize(scope.row.zipSize)
                 }}
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               prop="createTime"
               label="日期"
@@ -373,10 +373,10 @@
               fixed="right"
             >
               <template slot-scope="scope">
-                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : '#34C38B'}">{{scope.row.checkStatus === 0 ? '正在检测中' : '检测完成'}}</span>
+                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : '#34C38B'}">{{scope.row.checkStatus === 0 ? '正在检测中' : '检测完成'}} {{scope.row.checkProcess}}{{scope.row.checkProcess ? '%' : ''}}</span>
               </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop="checkProcess"
               label="检测进度"
               fixed="right"
@@ -384,7 +384,7 @@
               <template slot-scope="scope">
                 <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : 'rgba(0, 0, 0, 0.65)'}">{{scope.row.checkProcess}}{{scope.row.checkProcess ? '%' : ''}}</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作" width="100" fixed="right">
               <template slot-scope="scope" v-if="scope.row.checkStatus === 1">
                 <el-button
