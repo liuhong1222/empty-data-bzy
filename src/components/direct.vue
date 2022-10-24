@@ -370,6 +370,7 @@
             <el-table-column
               prop="checkStatus"
               label="检测状态"
+              fixed="right"
             >
               <template slot-scope="scope">
                 <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : '#34C38B'}">{{scope.row.checkStatus === 0 ? '正在检测中' : '检测完成'}}</span>
@@ -378,6 +379,7 @@
             <el-table-column
               prop="checkProcess"
               label="检测进度"
+              fixed="right"
             >
               <template slot-scope="scope">
                 <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : 'rgba(0, 0, 0, 0.65)'}">{{scope.row.checkProcess}}{{scope.row.checkProcess ? '%' : ''}}</span>
