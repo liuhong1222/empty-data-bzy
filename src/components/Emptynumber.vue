@@ -1076,11 +1076,14 @@ export default {
           const { data } = await this.$http.post(
             `front/empty/delete/${item.id}/${item.isOldData}`
           )
-          if (data.code !== 200) return this.$message.error('删除失败')
-          this.getPageList()
-          this.getLatestEmpty()
+          if (data.code === 200) {
+            this.$message.success('删除成功')
+            this.getPageList()
+            this.getLatestEmpty()
+          } else {
+            this.$message.error('删除失败')
+          }
         })
-        this.$message.success('删除成功')
       }
     },
     handleSizeChange(newSize) {

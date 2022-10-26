@@ -908,11 +908,14 @@ export default {
           const { data } = await this.$http.post(
             `front/international/delete/${item.id}`
           )
-          if (data.code !== 200) return this.$message.error('删除失败')
-          this.getInternationalPageList()
-          this.getLatestEmpty()
+          if (data.code === 200) {
+            this.$message.success('删除成功')
+            this.getInternationalPageList()
+            this.getLatestEmpty()
+          } else {
+            this.$message.error('删除失败')
+          }
         })
-        this.$message.success('删除成功')
       }
     },
     handleSizeChange(newSize) {
