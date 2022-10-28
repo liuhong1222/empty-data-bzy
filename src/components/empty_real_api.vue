@@ -66,7 +66,7 @@ export default {
   computed: {},
   created() {
     this.tabActive =
-      this.$route.params && this.$route.params.id ? this.$route.params.id : 1
+      (this.$route.params && this.$route.params.id) ? this.$route.params.id : 1
     // console.log(this.tabActive)
   },
   mounted() {
@@ -78,12 +78,16 @@ export default {
       this.tabActive = val
     },
     async getApiData() {
-      const { data } = await this.$http.get(
-        `/front/apiSettings/info/${JSON.parse(ss.get('customer')).id}`
-      )
-      if (data.code !== 200) return this.$message.error(data.msg)
-      this.apisetData = data.data
-      // console.log(this.apisetData)
+      if (JSON.parse(ss.get('customer')) && JSON.parse(ss.get('customer')).id) {
+        const { data } = await this.$http.get(
+          `/front/apiSettings/info/${JSON.parse(ss.get('customer')) ? JSON.parse(ss.get('customer')).id : ''}`
+        )
+        if (data.code !== 200) return this.$message.error(data.msg)
+        this.apisetData = data.data
+        // console.log(this.apisetData)
+      } else {
+        this.$message.error('暂不支持')
+      }
     },
     // 获取联系人信息-API域名
     async getContractInfo() {

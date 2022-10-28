@@ -280,8 +280,8 @@ export default {
   created() {
     this.getLogo()
     this.getContractInfo()
-    this.name = JSON.parse(ss.get('customer')).name
-    this.phone = JSON.parse(ss.get('customer')).phone
+    // this.name = JSON.parse(ss.get('customer')) ? JSON.parse(ss.get('customer')).name : ''
+    this.phone = JSON.parse(ss.get('customer')) ? JSON.parse(ss.get('customer')).phone : ''
   },
   watch: {
     $route: {
