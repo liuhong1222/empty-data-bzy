@@ -74,7 +74,19 @@
                 <p v-if="type === '国际号码检测'" class="di">
                   {{ item.remark }}
                   <del style="display: block"
+                    >￥{{ item.specifications * 0.003 }}</del
+                  >
+                </p>
+                <p v-if="type === '定向通用检测'" class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
                     >￥{{ item.specifications * 0.005 }}</del
+                  >
+                </p>
+                <p v-if="type === 'line定向检测'" class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
+                    >￥{{ item.specifications * 0.02 }}</del
                   >
                 </p>
                 <p v-else class="di">
