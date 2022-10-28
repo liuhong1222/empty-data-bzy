@@ -65,6 +65,12 @@
                     / {{ item.specifications / 10000 }}万条</span
                   >
                 </p>
+                <p v-if="type === '空号检测'" class="di">
+                  {{ item.remark }}
+                  <del style="display: block"
+                    >￥{{ item.specifications * 0.002 }}</del
+                  >
+                </p>
                 <p v-if="type === '实时查询'" class="di">
                   {{ item.remark }}
                   <del style="display: block"
@@ -87,12 +93,6 @@
                   {{ item.remark }}
                   <del style="display: block"
                     >￥{{ item.specifications * 0.02 }}</del
-                  >
-                </p>
-                <p v-else class="di">
-                  {{ item.remark }}
-                  <del style="display: block"
-                    >￥{{ item.specifications * 0.002 }}</del
                   >
                 </p>
                 <span class="choose" v-show="i === active"></span>
