@@ -21,8 +21,8 @@ Vue.prototype.$moment = moment
 Vue.prototype.$qs = QS
 
 // 统一下载域名
-Vue.prototype.downloadDomain = 'http://test.haifou.com:8088/' // stable、stable环境服务地址是43.37
-// Vue.prototype.downloadDomain = 'http://tp.xlhmjc.com/' //  sit环境发版/正式上线 tp.xlhmjc.com
+// Vue.prototype.downloadDomain = 'http://test.haifou.com:8088/' // stable、stable环境服务地址是43.37
+Vue.prototype.downloadDomain = window.location.hostname === 'net.zqyjc.com' ? 'http://tp.khmofang.com/' : 'http://tp.xlhmjc.com/' //  sit环境发版/正式上线 tp.xlhmjc.com
 // 批量下载前缀
 Vue.prototype.batchDownload = 'batch_download' // nginx配置批量下载前缀
 
