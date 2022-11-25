@@ -507,6 +507,104 @@
       </el-col>
     </el-row>
 
+    <!-- 统计列表 -->
+    <el-row :span="24" style="margin-top: 20px">
+      <el-col :span="24">
+        <el-card class="towcard threecard">
+          <div class="title">统计列表</div>
+          <el-col class="addBtnBox">
+            <el-col :span="24">
+              <span>日期</span>
+              <el-date-picker
+                v-model="consumeTimer"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+                class="picker"
+                :clearable="false"
+              >
+              </el-date-picker>
+              <label style="margin-right: 15px">数据类型</label>
+              <el-select v-model="staticTypeVal">
+                <el-option
+                  v-for="item in staticTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <el-button type="primary" size="small" @click="consumeSearch"
+                >查询</el-button
+              >
+            </el-col>
+          </el-col>
+          <el-table
+            :data="consumeTableData"
+            style="width: 100%; margin-bottom: 12px"
+            border
+          >
+            <el-table-column
+              prop="dayInt"
+              label="日期"
+              width="160"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.dayInt ? $moment(scope.row.dayInt).format('YYYY-MM-DD') : '' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="staticType"
+              label="数据类型"
+              width="140"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.staticType === 1 ? '在线检测' : 'API接口' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="emptyTotal"
+              label="总条数"
+            ></el-table-column>
+            <el-table-column prop="realNumber" label="正常">
+              <template slot-scope="scope">
+                <a>{{ scope.row.realNumber || 0 }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column prop="silentNumber" label="沉默号">
+              <template slot-scope="scope">
+                <a>{{ scope.row.silentNumber || 0 }}</a
+                >
+              </template>
+            </el-table-column>
+            <el-table-column prop="emptyNumber" label="空号">
+              <template slot-scope="scope">
+                <a>{{ scope.row.emptyNumber || 0 }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column prop="riskNumber" label="风险号">
+              <template slot-scope="scope">
+                <a>{{ scope.row.riskNumber || 0 }}</a
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 分页区域 -->
+          <el-pagination
+            @size-change="consumeSizeChange"
+            @current-change="consumeCurrentChange"
+            :current-page="consumeQueryInfo.page"
+            :page-sizes="[10, 15, 20, 25, 30]"
+            :page-size="consumeQueryInfo.size"
+            layout="total, prev, pager, next, sizes, jumper"
+            :total="consumeTotal"
+          ></el-pagination>
+        </el-card>
+      </el-col>
+    </el-row>
+
     <el-dialog title="正在检测的任务" :visible.sync="dialogVisible" width="30%">
       <div v-for="item in runningList" :key="item.id" class="dialog">
         <span style="width: 70%; text-align: left">{{ item.name }}.txt</span>
@@ -622,7 +720,35 @@ export default {
       dialogImageUrl: '',
       dialogVisible1: false,
       isCertified: false, // 是否认证
-      isDownloadAll: false // 是否可以一键下载全部
+      isDownloadAll: false, // 是否可以一键下载全部
+      consumeTimer: [
+        this.$moment().startOf('month').format('YYYY-MM-DD'),
+        this.$moment().format('YYYY-MM-DD')
+      ], // 时间选择框
+      consumeQueryInfo: {
+        page: 1,
+        size: 10,
+        startDay: this.$moment().startOf('month').format('YYYY-MM-DD'),
+        endDay: this.$moment().format('YYYY-MM-DD')
+      },
+      consumeTableData: [],
+      consumeTotal: 0,
+      consumeCurrentSize: 10,
+      staticTypeVal: '',
+      staticTypeOptions: [
+        {
+          value: '',
+          label: '全部'
+        },
+        {
+          value: '1',
+          label: '在线检测'
+        },
+        {
+          value: '2',
+          label: 'API接口'
+        }
+      ]
     }
   },
   methods: {
@@ -1110,6 +1236,45 @@ export default {
     handlePictureCardPreview(url) {
       this.dialogImageUrl = this.downloadDomain + url
       this.dialogVisible1 = true
+    },
+    consumeSearch() {
+      if (this.consumeTimer != null) {
+        this.consumeQueryInfo.startDay = this.consumeTimer[0]
+        this.consumeQueryInfo.endDay = this.consumeTimer[1]
+      } else {
+        this.consumeQueryInfo.startDay = this.consumeQueryInfo.endDay = ''
+      }
+      this.consumeQueryInfo.page = 1
+      this.consumeQueryInfo.size = this.consumeCurrentSize
+      this.getConsumePage()
+    },
+    // 获取检测记录
+    async getConsumePage() {
+      const { startDay, endDay, page, size } = this.consumeQueryInfo
+      const params = new FormData()
+      // 此接口使用form-data传参，body里面要传domain
+      params.append('domain', window.location.hostname)
+      params.append('startDay', startDay ? this.$moment(startDay).format('YYYYMMDD') : '')
+      params.append('endDay', endDay ? this.$moment(endDay).format('YYYYMMDD') : '')
+      params.append('staticType', this.staticTypeVal)
+      params.append('page', page)
+      params.append('size', size)
+      const { data } = await this.$http.post(
+        'front/dailyInfo/list/empty',
+        params
+      )
+      if (data.code !== 200) return this.$message.error(data.msg)
+      this.consumeTableData = data.data.list
+      this.consumeTotal = parseInt(data.data.total)
+    },
+    consumeSizeChange(newSize) {
+      this.consumeCurrentSize = newSize
+      this.consumeQueryInfo.size = newSize
+      this.getConsumePage()
+    },
+    consumeCurrentChange(newCurrent) {
+      this.consumeQueryInfo.page = newCurrent
+      this.getConsumePage()
     }
   },
   mounted() {
@@ -1120,6 +1285,7 @@ export default {
     this.getPageList()
     // this.getRunningList()
     this.getCertified()
+    this.getConsumePage()
   },
   // 页面卸载时清除计时器
   destroyed() {
