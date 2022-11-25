@@ -62,15 +62,21 @@
               </span>
             </div>
           </el-popover>
-          <span class="rit-span" @click="numberCube">
-            <i class="el-icon-download" style="margin-right: 0px"></i>
-            号码魔方下载
-          </span>
-          <div class="name" @mouseenter="showDrop()" @mouseleave="hideDrop()">
-            <p class="p1">{{ phone }}</p>
-            <!-- <p class="p2">{{ name }}</p> -->
+          <el-dropdown @command="handleMobileCube">
+            <span class="rit-span">
+              <i class="el-icon-download"></i>
+              <span style="margin: 0 4px">号码魔方下载</span>
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu class="el-dropdown-list el-dropdown-mobilecub" slot="dropdown">
+              <el-dropdown-item command="A">国内</el-dropdown-item>
+              <el-dropdown-item command="B">国际</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <div class="name rit-span" @mouseenter="showDrop()" @mouseleave="hideDrop()">
+            <span class="p1">{{ phone }}</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
-          <img src="../assets/img/down.png" alt="down" />
           <ul
             class="drop-list"
             v-show="isDropShow"
@@ -237,7 +243,20 @@ export default {
       // console.log(key)
       this.active = key
     },
-    async numberCube() {
+    // 号码魔方下拉框
+    handleMobileCube(name) {
+      let cubeType = 1
+      switch (name) {
+        case 'A':
+          cubeType = 1
+          break
+        case 'B':
+          cubeType = 2
+          break
+      }
+      this.getMobileCubePath(cubeType)
+    },
+    async getMobileCubePath(cubeType) {
       // if (this.siteInfo.domain === 'buzheny.com') {
       //   window.open(`${this.downloadDomain}/resource/步正号码魔方.rar`)
       // } else if (this.siteInfo.domain === 'yfeifei.com') {
@@ -251,7 +270,7 @@ export default {
       // } else {
       //   window.open(`${this.downloadDomain}/resource/号码魔方.rar`)
       // }
-      const { data } = await this.$http.post('front/getMobileCubePath ')
+      const { data } = await this.$http.post('front/getMobileCubePath', { cubeType: cubeType })
       if (data) {
         window.open(`${this.downloadDomain}/${data.replace(/"/g, '')}`)
       } else {
@@ -375,6 +394,7 @@ export default {
         line-height: 60px;
         padding: 0 15px;
         cursor: pointer;
+        color: #fff;
       }
       .rit-span:hover {
         color: #5290fd;
@@ -383,24 +403,9 @@ export default {
       .name {
         font-size: 12px;
         height: 60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
         cursor: pointer;
-        &:hover {
-          // color: #5290fd;
-          // background-color: #363b4f !important;
-        }
         .p1 {
           margin: 0 5px;
-        }
-        .p2 {
-          margin: 0 5px;
-          width: 90px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
         }
       }
       .drop-list {
