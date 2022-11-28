@@ -245,18 +245,18 @@ export default {
     },
     // 号码魔方下拉框
     handleMobileCube(name) {
-      let cubeType = 1
+      let type = 'national'
       switch (name) {
         case 'A':
-          cubeType = 1
+          type = 'national'
           break
         case 'B':
-          cubeType = 2
+          type = 'international'
           break
       }
-      this.getMobileCubePath(cubeType)
+      this.getMobileCubePath(type)
     },
-    async getMobileCubePath(cubeType) {
+    async getMobileCubePath(type) {
       // if (this.siteInfo.domain === 'buzheny.com') {
       //   window.open(`${this.downloadDomain}/resource/步正号码魔方.rar`)
       // } else if (this.siteInfo.domain === 'yfeifei.com') {
@@ -270,7 +270,9 @@ export default {
       // } else {
       //   window.open(`${this.downloadDomain}/resource/号码魔方.rar`)
       // }
-      const { data } = await this.$http.post('front/getMobileCubePath', { cubeType: cubeType })
+      const params = new FormData()
+      params.append('fileType', type)
+      const { data } = await this.$http.post('front/getMobileCubePath', params)
       if (data) {
         window.open(`${this.downloadDomain}/${data.replace(/"/g, '')}`)
       } else {
