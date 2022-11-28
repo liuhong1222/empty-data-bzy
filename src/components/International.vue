@@ -480,7 +480,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="emptyTotal"
+              prop="internationalTotal"
               label="总条数"
             ></el-table-column>
             <el-table-column prop="activeNumber" label="已激活">
