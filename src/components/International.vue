@@ -258,7 +258,7 @@
       </el-col>
     </el-row>
     <!-- 历史检测 -->
-    <el-row :span="24" style="margin-top: 20px">
+    <el-row :span="24" style="margin-top: 20px" id="fromInternationalTest">
       <el-col :span="24">
         <el-card class="towcard threecard">
           <div class="title">检测记录</div>
@@ -312,7 +312,7 @@
             border
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="50"></el-table-column>
+            <el-table-column type="selection" width="50" :selectable="checkTableBoolean"></el-table-column>
             <el-table-column prop="name" label="名称" width="160">
               <template slot-scope="scope">
                 <span>{{
@@ -347,7 +347,7 @@
                   @click="
                     downloadTxt(scope.row, '已激活.txt', 'activeFilePath')
                   "
-                  >{{ scope.row.activeNumber || 0 }}</a
+                  >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.activeNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
@@ -364,7 +364,7 @@
                   @click="
                     downloadTxt(scope.row, '未激活.txt', 'noRegisterFilePath')
                   "
-                  >{{ scope.row.noRegisterNumber || 0 }}</a
+                  >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.noRegisterNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
@@ -382,7 +382,7 @@
                   @click="
                     downloadTxt(scope.row, '未注册.txt', 'unknownFilePath')
                   "
-                  >{{ scope.row.unknownNumber || 0 }}</a
+                  >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.unknownNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
@@ -390,8 +390,17 @@
               prop="totalNumber"
               label="总条数"
             ></el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
+            <el-table-column
+              prop="checkStatus"
+              label="检测状态"
+              fixed="right"
+            >
               <template slot-scope="scope">
+                <span :style="{'color': scope.row.checkStatus === 0  ? '#FFAC2E' : '#34C38B'}">{{scope.row.checkStatus === 0 ? '正在检测中' : '检测完成'}} {{scope.row.checkProcess}}{{scope.row.checkProcess ? '%' : ''}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100" fixed="right">
+              <template slot-scope="scope" v-if="scope.row.checkStatus === 1">
                 <el-button
                   type="text"
                   size="mini"
@@ -666,11 +675,18 @@ export default {
       return formatSize + 'KB'
     },
     // 检测成功
-    testSuccess() {
+    testSuccess(value) {
       // debugger
       this.getData()
       this.getLatestEmpty()
       this.getInternationalPageList()
+      if (value && value === 'internationalPosition') {
+        // 定向检测-立即检测接口成功-锚点跳转到表格模块
+        const anchorEle = document.querySelector('#fromInternationalTest')
+        if (anchorEle) {
+          anchorEle.scrollIntoView(true)
+        }
+      }
     },
     async getData() {
       const { data } = await this.$http.get('front/personal/personalInfo')
@@ -1062,6 +1078,14 @@ export default {
     handlePictureCardPreview(url) {
       this.dialogImageUrl = this.downloadDomain + url
       this.dialogVisible = true
+    },
+    // 判断表格是否可被勾选
+    checkTableBoolean(row) {
+      if (row.checkStatus === 0) {
+        return 0
+      } else {
+        return 1
+      }
     },
     consumeSearch() {
       if (this.consumeTimer != null) {
