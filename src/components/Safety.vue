@@ -619,8 +619,7 @@ export default {
   data() {
     // 验证手机号
     let checkMobile = (rule, value, cb) => {
-      const regMobile =
-        /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+      const regMobile = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
       if (regMobile.test(value)) return cb()
       cb(new Error('请输入合法的手机号'))
     }
