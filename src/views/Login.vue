@@ -172,20 +172,16 @@
         ></span>
       </section>
     </div>
-    <div class="login-verify" v-show="isShowSlide" @mouseleave="hideSlide">
-      <slide-verify ref="slideblock" @success="sendVerifyCode"></slide-verify>
-    </div>
   </div>
 </template>
 
 <script>
 import { ss } from '../utils/storage.js'
-import SlideVerify from '../components/slide_verify.vue'
 import FindPassword from '../components/find_password.vue'
 
 export default {
   name: 'Login',
-  components: { SlideVerify, FindPassword },
+  components: { FindPassword },
   data() {
     return {
       isLogin: true, // 登录页面
@@ -225,7 +221,6 @@ export default {
       hideCodeItem: true,
       thisYear: new Date().getFullYear(),
       isCodeLogin: true,
-      isShowSlide: false,
       siteInfo: {}
     }
   },
@@ -249,26 +244,17 @@ export default {
       const { data } = await this.$http.get('front/siteInfo')
       this.siteInfo = data.data
     },
-    // 隐藏滑块验证码
-    hideSlide() {
-      setTimeout(() => {
-        this.isShowSlide = false
-        this.$refs.slideblock.onReset() // 重置滑块
-      }, 500)
-    },
     // 滑块验证通过，发送验证码请求
-    async sendVerifyCode() {
-      this.isShowSlide = false // 隐藏滑块
-      this.$refs.slideblock.onReset() // 重置滑块
+    async sendVerifyCode(randStr, ticket) {
       const { data: res } = await this.$http.post('front/sendCode', {
-        phone: this.form.phone
+        phone: this.form.phone,
+        randStr: randStr,
+        ticket: ticket
       })
       if (res.code === 200) {
         this.countDownFunc()
         this.form.verifySmsToken = res.data
         this.$message.success('获取验证码成功')
-        // console.log(this.form)
-        // console.log(this.form.verifySmsToken)
       } else {
         this.$message.error(res.msg)
       }
@@ -285,7 +271,36 @@ export default {
       if (!this.form.phone || !this.isPhone(this.form.phone)) {
         return this.$message.error('请输入正确的手机号码')
       }
-      this.isShowSlide = true
+      this.captChaClick()
+    },
+    // 定义验证码触发事件
+    captChaClick () {
+      try {
+        var captcha = new window.TencentCaptcha('199229427', this.captChaCallback, {})
+        captcha.show()
+      } catch (error) {
+        this.loadErrorCallback()
+      }
+    },
+    // 定义验证码js加载错误处理函数
+    loadErrorCallback () {
+      var appid = 'pa1Ji2dT'
+      // 生成容灾票据或自行做其它处理
+      var ticket = 'terror_1001_' + appid + Math.floor(new Date().getTime() / 1000)
+      this.captChaCallback({
+        ret: 0,
+        randstr: '@' + Math.random().toString(36).substr(2),
+        ticket,
+        errorCode: 1001,
+        errorMessage: 'jsload_error'
+      })
+    },
+    // 定义回调函数
+    captChaCallback (res) {
+      // console.log('callback:', res)
+      if (res.ret === 0 && res.randstr && res.ticket) {
+        this.sendVerifyCode(res.randstr, res.ticket)
+      }
     },
     // 获取验证码倒计时
     countDownFunc() {
