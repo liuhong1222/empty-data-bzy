@@ -90,16 +90,35 @@
                     重新绑定</el-button
                   >
                 </div>
+                <div class="set-item">
+                  <div class="title">
+                    <h4>
+                      <img src="../assets/img/balance_mind_icon.svg" alt="icon" />
+                      余额提醒
+                    </h4>
+                  </div>
+                  <div class="set-des">
+                    产品余额低于设置的值时，系统会发送提醒信息到联系人手机号
+                  </div>
+                  <el-button
+                    size="small"
+                    icon="iconfont iconcaozuo-xunhuan"
+                    @click="balanceRemindShow = true"
+                    class="button"
+                  >
+                    设置余额提醒</el-button
+                  >
+                </div>
               </div>
               <div class="sets towsets">
                 <div class="set-item">
                   <div class="title">
                     <h4><i class="iconfont iconyouxiang icon"></i>邮箱绑定</h4>
                   </div>
-                  <p v-if="personalInfo.email">
-                    当前邮箱：<strong>{{ personalInfo.email }}</strong>
-                  </p>
                   <div class="set-des">
+                    <p v-if="personalInfo.email">
+                      当前邮箱：<strong>{{ personalInfo.email }}</strong>
+                    </p>
                     绑定邮箱可以使用邮箱当做您的登陆账户
                   </div>
                   <el-button
@@ -609,6 +628,71 @@
         </el-form>
       </div>
     </el-dialog>
+
+    <!-- 余额提醒 -->
+    <el-dialog
+      :visible.sync="balanceRemindShow"
+      width="420px"
+      :close-on-click-modal="false"
+      @close="DialogClosed6"
+    >
+      <div class="bindNumber">
+        <p class="title">设置余额提醒</p>
+        <el-form
+          :model="balanceRemindFrom"
+          :rules="balanceRemindRules"
+          ref="balanceRemindRef"
+          class="password_form balance_mind"
+          label-width="95px"
+          label-position="left"
+        >
+          <div class="box">
+            <el-form-item label="选择产品" prop="productType">
+              <el-select v-model="balanceRemindFrom.productType" style="width: 252px;" @change="handleProductChange">
+                <el-option
+                  v-for="item in productTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="提醒余额" prop="warningCount" class="balance_mind_number">
+              <el-input-number
+                v-model="balanceRemindFrom.warningCount"
+                controls-position="right"
+                :min="1"
+                :precision='0'
+                placeholder="请输入提醒余额"
+                style="width: 228px;"
+              >
+              </el-input-number>
+              <span class='count-unit'>条</span>
+              <p class="count-note">产品余额低于该值时，系统会发送提醒信息到联系人手机号</p>
+            </el-form-item>
+            <el-form-item label="联系人手机号" prop="informMobiles">
+              <el-input
+                v-model="balanceRemindFrom.informMobiles"
+                placeholder='请输入联系人手机号，多个号码以英文逗号分隔'
+                type='textarea'
+                style="width: 252px;"
+              ></el-input>
+            </el-form-item>
+            <el-button
+              :loading="btnLoading"
+              style="margin: 8px 10px 10px 0"
+              size="small"
+              @click="submitBalanceMind"
+              >提交</el-button
+            >
+            <el-button size="small" @click="balanceRemindShow = false"
+              >取消</el-button
+            >
+          </div>
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -875,7 +959,66 @@ export default {
       counter3: 60,
       notChange: false, // 能否修改新手机号
       btnLoading: false,
-      dialogVisibleZipAdd: false
+      dialogVisibleZipAdd: false,
+
+      balanceRemindShow: false,
+      productTypeOptions: [
+        {
+          label: '空号检测',
+          value: '1'
+        },
+        {
+          label: '实时检测',
+          value: '2'
+        },
+        {
+          label: '国际号码检测',
+          value: '3'
+        },
+        {
+          label: '定向通用检测',
+          value: '4'
+        },
+        {
+          label: 'line定向检测',
+          value: '5'
+        }
+      ],
+      balanceRemindInit: {},
+      balanceRemindFrom: {
+        productType: null,
+        warningCount: undefined,
+        informMobiles: null
+      },
+      balanceRemindRules: {
+        productType: [
+          {
+            required: true,
+            message: '产品不能为空',
+            trigger: 'blur'
+          }
+        ],
+        warningCount: [
+          {
+            required: true,
+            message: '提醒余额不能为空',
+            trigger: 'blur'
+          }
+        ],
+        informMobiles: [
+          {
+            required: true,
+            message: '手机号不能为空',
+            trigger: 'blur'
+          },
+          {
+            // 多个手机号用英文逗号隔开
+            pattern: /^1[3456789][0-9]{9}(,1[3456789][0-9]{9})*$/,
+            message: '请输入正确的手机号',
+            trigger: 'blur'
+          }
+        ]
+      }
     }
   },
   methods: {
@@ -1182,6 +1325,44 @@ export default {
       this.getData()
       // })
     },
+    async handleProductChange(value) {
+      let url = '/front/warning/findOne'
+      const paramsForm = new FormData()
+      paramsForm.append('productType', this.balanceRemindFrom.productType)
+      const { data } = await this.$http.post(url, paramsForm)
+      if (data.code !== 200) return this.$message.error(data.msg)
+
+      if (data.data) {
+        if (value + '' === data.data.productType + '') {
+          this.balanceRemindFrom.informMobiles = data.data.informMobiles
+          this.balanceRemindFrom.warningCount = data.data.warningCount
+          this.balanceRemindInit.id = data.data.id
+        }
+      } else {
+        this.balanceRemindFrom.informMobiles = null
+        this.balanceRemindFrom.warningCount = undefined
+        this.balanceRemindInit.id = null
+      }
+    },
+    // 设置余额提醒
+    submitBalanceMind() {
+      this.$refs.balanceRemindRef.validate(async (valid) => {
+        if (!valid) return
+        this.btnLoading = true
+        let url = 'front/warning/modify'
+        let params = {
+          id: this.balanceRemindInit.id || undefined,
+          productType: this.balanceRemindFrom.productType,
+          warningCount: this.balanceRemindFrom.warningCount,
+          informMobiles: this.balanceRemindFrom.informMobiles
+        }
+        const { data } = await this.$http.post(url, params)
+        this.btnLoading = false
+        if (data.code !== 200) return this.$message.error(data.msg)
+        this.$message.success('设置余额提醒成功')
+        this.balanceRemindShow = false
+      })
+    },
     // 对话框关闭事件
     DialogClosed() {
       this.$refs.editPasswordFormRef.resetFields()
@@ -1208,6 +1389,10 @@ export default {
     DialogClosed5() {
       this.$refs.AddZipFormRef.resetFields()
       this.dialogVisibleZipAdd = false
+    },
+    DialogClosed6() {
+      this.$refs.balanceRemindRef.resetFields()
+      this.balanceRemindShow = false
     },
     // 今日登录日志
     async getLoginTable1() {
@@ -1351,7 +1536,7 @@ export default {
     .set-item {
       padding-left: 13px;
       width: 350px;
-      &:first-child {
+      &:first-child, &:nth-child(2) {
         margin-right: 120px;
       }
       .title {
@@ -1368,7 +1553,7 @@ export default {
         }
       }
       .set-des {
-        padding: 18px 0 28px;
+        min-height: 80px;
       }
     }
   }
@@ -1471,5 +1656,24 @@ export default {
   line-height: 34px;
   font-size: 14px;
   padding: 0 10px;
+}
+.balance_mind .count-unit {
+  margin-left: 8px;
+}
+.bindNumber .balance_mind .box .count-note {
+  margin-bottom: 0;
+  color: #8C8C8C;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 0;
+}
+.bindNumber .balance_mind.el-form .el-form-item {
+  margin-bottom: 20px;
+}
+.bindNumber .balance_mind.el-form .balance_mind_number .el-input-number {
+  line-height: 34px;
+}
+.bindNumber .balance_mind.el-form .balance_mind_number .el-input-number .el-input-number__increase {
+  line-height: 15px;
 }
 </style>
