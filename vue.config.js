@@ -31,8 +31,8 @@ module.exports = {
     proxy: {
       '/apis/*': {
         // target: 'http://172.18.109.136:8883', // xybb
-        target: 'http://172.16.43.37:8883', // stable
-        // target: 'http://172.18.109.136:8802', // 迅龙
+        // target: 'http://172.16.43.37:8883', // stable
+        target: 'http://172.18.106.136:8883', // lh
         // target: 'http://khkjc.com/',
         ws: false,
         secure: false,

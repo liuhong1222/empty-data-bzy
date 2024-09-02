@@ -103,7 +103,7 @@
                   <el-button
                     size="small"
                     icon="iconfont iconcaozuo-xunhuan"
-                    @click="balanceRemindShow = true"
+                    @click="clickBalanceMind"
                     class="button"
                   >
                     设置余额提醒</el-button
@@ -986,7 +986,7 @@ export default {
       ],
       balanceRemindInit: {},
       balanceRemindFrom: {
-        productType: null,
+        productType: '1',
         warningCount: undefined,
         informMobiles: null
       },
@@ -1325,7 +1325,15 @@ export default {
       this.getData()
       // })
     },
-    async handleProductChange(value) {
+    clickBalanceMind() {
+      this.balanceRemindShow = true
+      this.getProductData(this.balanceRemindFrom.productType)
+    },
+    handleProductChange(value) {
+      this.getProductData(value)
+    },
+    // 获取余额提醒回显数据
+    async getProductData(value) {
       let url = '/front/warning/findOne'
       const paramsForm = new FormData()
       paramsForm.append('productType', this.balanceRemindFrom.productType)
@@ -1333,11 +1341,9 @@ export default {
       if (data.code !== 200) return this.$message.error(data.msg)
 
       if (data.data) {
-        if (value + '' === data.data.productType + '') {
-          this.balanceRemindFrom.informMobiles = data.data.informMobiles
-          this.balanceRemindFrom.warningCount = data.data.warningCount
-          this.balanceRemindInit.id = data.data.id
-        }
+        this.balanceRemindFrom.informMobiles = data.data.informMobiles
+        this.balanceRemindFrom.warningCount = data.data.warningCount
+        this.balanceRemindInit.id = data.data.id
       } else {
         this.balanceRemindFrom.informMobiles = null
         this.balanceRemindFrom.warningCount = undefined
