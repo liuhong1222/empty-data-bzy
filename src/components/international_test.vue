@@ -6,6 +6,10 @@
         :disabled="countryCodeDisabled"
         placeholder="请选择国码（必选）"
         class="country-code"
+        filterable
+        remote
+        :remote-method="remoteMethod"
+        :loading="loading"
       >
         <el-option
           v-for="item in countryCodeList"
@@ -242,8 +246,10 @@ export default {
       uploadCompleted: '文件上传中，请勿离开...', // 分片上传进度
       checkId: '', // 文件检测id（唯一id）
       countryCodeList: [], // 国码下拉框数据
+      allCountry: [],
       countryCodeValue: undefined, // 选中的国码
-      countryCodeDisabled: false // 检测时不可选择国码
+      countryCodeDisabled: false, // 检测时不可选择国码
+      loading: false // 模糊查询
     }
   },
   head() {
@@ -280,7 +286,7 @@ export default {
     }
   },
   mounted() {
-    this.getCountryCode()
+    this.getAllCountry()
     this.fileInfObj = {
       id: null,
       sendID: null,
@@ -290,8 +296,31 @@ export default {
   },
   methods: {
     // 获取国码列表
-    async getCountryCode() {
+    async getAllCountry() {
       const { data } = await this.$http.post('front/country/codeList')
+      if (data.code !== 200) return this.$message.error(data.msg)
+      this.countryCodeList = data.data
+      this.allCountry = data.data
+    },
+    // 国码模糊查询
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        try {
+          this.getCountryCode(query)
+        } catch (error) {
+          console.error('请求失败:', error)
+        } finally {
+          this.loading = false
+        }
+      } else {
+        this.countryCodeList = this.allCountry
+      }
+    },
+    async getCountryCode(query) {
+      let formData = new FormData()
+      formData.append('carrierCode', query)
+      const { data } = await this.$http.post('front/country/codeList', formData)
       if (data.code !== 200) return this.$message.error(data.msg)
       this.countryCodeList = data.data
     },
