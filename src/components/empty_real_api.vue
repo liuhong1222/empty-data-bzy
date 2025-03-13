@@ -29,6 +29,11 @@
         :apiset-data="apisetData"
         :api-domain="apiDomain"
       />
+      <blacklistapi
+        v-if="JSON.stringify(apisetData) !== '{}' && tabActive === 4"
+        :apiset-data="apisetData"
+        :api-domain="apiDomain"
+      />
     </section>
   </div>
 </template>
@@ -38,10 +43,11 @@ import { ss } from '../utils/storage'
 import Emptyapi from './Emptyapi'
 import Realtimeapi from './Realtimeapi'
 import RealtimeStardard from './RealtimeStardard'
+import Blacklistapi from './Blacklistapi'
 
 export default {
   name: 'EmptyRealApi',
-  components: { Emptyapi, Realtimeapi, RealtimeStardard },
+  components: { Emptyapi, Realtimeapi, RealtimeStardard, Blacklistapi },
   data() {
     return {
       tabActive: 1,
@@ -57,6 +63,10 @@ export default {
         {
           name: '实时查询API标准版',
           key: 3
+        },
+        {
+          name: '黑名单检测',
+          key: 4
         }
       ],
       apisetData: {}, // api参数

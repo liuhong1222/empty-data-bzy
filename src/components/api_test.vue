@@ -534,12 +534,16 @@ export default {
     async postmanSend() {
       // console.log(this.testParamsArr)
       let mobiles = ''
+      let forbidLevel = ''
       // let appId = ''
       // let appKey = ''
       this.testParamsArr.map((item) => {
         switch (item.params) {
           case 'mobiles':
             mobiles = item.value
+            break
+          case 'forbidLevel':
+            forbidLevel = item.value
             break
           // case 'appId':
           //   appId = item.value
@@ -554,6 +558,9 @@ export default {
       let testForm = new FormData()
       if (this.from === 'emptyapi') {
         testForm.append('mobiles', mobiles)
+      } else if (this.from === 'blacklistapi') {
+        testForm.append('mobiles', mobiles)
+        testForm.append('productType', forbidLevel)
       } else {
         testForm.append('mobile', mobiles)
       }

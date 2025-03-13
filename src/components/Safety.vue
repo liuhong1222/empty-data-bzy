@@ -976,12 +976,8 @@ export default {
           value: '3'
         },
         {
-          label: '定向通用检测',
+          label: '黑名单检测',
           value: '4'
-        },
-        {
-          label: 'line定向检测',
-          value: '5'
         }
       ],
       balanceRemindInit: {},

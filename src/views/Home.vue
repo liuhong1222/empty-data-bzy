@@ -126,7 +126,7 @@
             </el-menu-item>
             <el-menu-item index="/direct">
               <i class="el-icon-circle-plus-outline gj-icon"></i>
-              <span slot="title">国际定向检测</span>
+              <span slot="title">黑名单检测</span>
             </el-menu-item>
             <!-- <el-menu-item index="/emptyapi">
             <i class="iconfont iconshendujiance"></i>
@@ -180,8 +180,7 @@
                 <el-menu-item index="/khrecord">空号检测</el-menu-item>
                 <el-menu-item index="/sskecord">实时查询</el-menu-item>
                 <el-menu-item index="/international-record">国际号码检测</el-menu-item>
-                <el-menu-item index="/direct-record">定向通用检测</el-menu-item>
-                <el-menu-item index="/line-direct-record">line定向检测</el-menu-item>
+                <el-menu-item index="/direct-record">黑名单检测</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>

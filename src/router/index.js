@@ -46,7 +46,7 @@ const routes = [
         path: 'direct',
         name: 'direct',
         component: () => import('../components/direct.vue')
-      }, // 国际定向检测
+      }, // 黑名单检测
       {
         path: 'matching',
         name: 'Matching',
@@ -80,13 +80,8 @@ const routes = [
       {
         path: 'direct-record',
         name: 'DirectRecord',
-        component: () => import('../components/direct_record.vue')
-      }, // 定向通用检测记录
-      {
-        path: 'line-direct-record',
-        name: 'LineDirectRecord',
         component: () => import('../components/line_direct_record.vue')
-      }, // line定向检测记录
+      }, // 黑名单检测记录
       {
         path: 'recharge',
         name: 'Recharge',

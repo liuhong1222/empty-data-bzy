@@ -4,7 +4,7 @@
       <div class="direct-product-title">
         <div class="i-title">
           <img src="../assets/img/direct_record.png" />
-          <div class="title">国际定向检测</div>
+          <div class="title">黑名单检测</div>
         </div>
       </div>
     </el-row>
@@ -13,41 +13,22 @@
       <el-col :span="8">
         <el-card class="_el-card">
           <div class="onecard">
-            <div class="balance-info">
-              <p class="title">定向通用检测</p>
-              <p class="count">{{ personalInfo.directCommonBalance }}</p>
+            <div class="left-block">
+              <div class="count">{{ personalInfo.lineDirectBalance }}</div>
               <div class="des">
                 账户总余额<span class="unit">（ 条 ）</span>
-              </div>
-              <div>
-                <el-button
-                  type="danger"
-                  size="small"
-                  icon="iconfont iconchongzhi"
-                  class="button recharge-btn"
-                  @click="goRecharge('定向通用检测')"
-                >
-                  充值</el-button
-                >
               </div>
             </div>
-            <div class="balance-info">
-              <p class="title">line定向检测</p>
-              <p class="count">{{ personalInfo.lineDirectBalance }}</p>
-              <div class="des">
-                账户总余额<span class="unit">（ 条 ）</span>
-              </div>
-              <div>
-                <el-button
-                  type="danger"
-                  size="small"
-                  icon="iconfont iconchongzhi"
-                  class="button recharge-btn"
-                  @click="goRecharge('line定向检测')"
-                >
-                  充值</el-button
-                >
-              </div>
+            <div>
+              <el-button
+                type="danger"
+                size="small"
+                icon="iconfont iconchongzhi"
+                class="button recharge-btn"
+                @click="goRecharge('黑名单检测')"
+              >
+                充值</el-button
+              >
             </div>
           </div>
         </el-card>
@@ -132,18 +113,9 @@
             :is-certified="isCertified"
             @testSuccess="testSuccess"
           />
-          <div class="gray">
-            <p>
-              注:
-              1、号码文件中号码不管有没有带国码都<strong>必须选择国码</strong>；每批上传的号码只能同一个国家的号码，不支持一次性筛查多个国家的号码；筛查完下载的号码系统都已带上了国码
-            </p>
-            <p class="txt">
-              2、
-              <strong>
-                文件格式仅支持TXT格式文件/每行一个手机号/支持最低2000条-200W条号码包上传/txt文件小于30MB
-              </strong>
-            </p>
-          </div>
+          <p class="gray">
+            注:文件格式支持txt（每行一个手机号）、xls（手机号须在第一张工作表的第一列）/支持最低1—300W条号码(40M)上传/检测记录仅保存一年
+          </p>
         </el-card>
       </el-col>
     </el-row>
@@ -156,12 +128,12 @@
             <el-col :span="12" style="width: 50%">
               <div class="result-box">
                 <p class="result-title">
-                  已激活
+                  正常号码
                   <el-popover
                     placement="right"
                     width="160"
                     trigger="hover"
-                    content="已激活用户"
+                    content="正常号码用户"
                   >
                     <i class="iconfont iconquestion icon" slot="reference"></i>
                   </el-popover>
@@ -186,12 +158,12 @@
             <el-col :span="12" style="width: 50%">
               <div class="result-box" style="border-right: none">
                 <p class="result-title">
-                  未注册
+                  黑名单
                   <el-popover
                     placement="right"
                     width="160"
                     trigger="hover"
-                    content="未注册"
+                    content="黑名单"
                   >
                     <i class="iconfont iconquestion icon" slot="reference"></i>
                   </el-popover>
@@ -306,7 +278,13 @@
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="50" :selectable="checkTableBoolean"></el-table-column>
-            <el-table-column prop="productType" label="产品类型" width="100"></el-table-column>
+            <el-table-column prop="productType" label="产品类型" width="130">
+              <template slot-scope="scope">
+                <span>{{
+                  scope.row.productType ? productTypeMap[scope.row.productType] : ''
+                }}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="name" label="名称" width="160">
               <template slot-scope="scope">
                 <span>{{
@@ -328,7 +306,7 @@
               label="日期"
               width="160"
             ></el-table-column>
-            <el-table-column prop="activeNumber" label="已激活">
+            <el-table-column prop="activeNumber" label="正常号码">
               <template slot-scope="scope">
                 <a
                   :style="{
@@ -339,13 +317,13 @@
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '已激活.txt', 'activeFilePath')
+                    downloadTxt(scope.row, '正常号码.txt', 'activeFilePath')
                   "
                   >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.activeNumber || 0) }}</a
                 >
               </template>
             </el-table-column>
-            <el-table-column prop="noRegisterNumber" label="未注册">
+            <el-table-column prop="noRegisterNumber" label="黑名单">
               <template slot-scope="scope">
                 <a
                   :style="{
@@ -357,7 +335,7 @@
                   }"
                   style="cursor: pointer; color: #6799ee"
                   @click="
-                    downloadTxt(scope.row, '未注册.txt', 'noRegisterFilePath')
+                    downloadTxt(scope.row, '黑名单.txt', 'noRegisterFilePath')
                   "
                   >{{ scope.row.checkStatus === 0  ? '-' : (scope.row.noRegisterNumber || 0) }}</a
                 >
@@ -489,23 +467,28 @@
               label="产品类型"
               width="140"
             >
+              <template slot-scope="scope">
+                <span>{{
+                  scope.row.productType ? productTypeMap[scope.row.productType] : ''
+                }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="directTotal"
               label="总条数"
             ></el-table-column>
-            <el-table-column prop="activeNumber" label="已激活">
+            <el-table-column prop="activeNumber" label="正常号码">
               <template slot-scope="scope">
                 <a>{{ scope.row.activeNumber || 0 }}</a>
               </template>
             </el-table-column>
-            <el-table-column prop="interUnknownNumber" label="未激活">
+            <!-- <el-table-column prop="interUnknownNumber" label="未激活">
               <template slot-scope="scope">
                 <a>{{ scope.row.interUnknownNumber || 0 }}</a
                 >
               </template>
-            </el-table-column>
-            <el-table-column prop="noRegisterNumber" label="未注册">
+            </el-table-column> -->
+            <el-table-column prop="noRegisterNumber" label="黑名单">
               <template slot-scope="scope">
                 <a>{{ scope.row.noRegisterNumber || 0 }}</a>
               </template>
@@ -623,26 +606,22 @@ export default {
       uploadListShow: false, // 文件上传弹窗是否展示
       isDownloadAll: false, // 是否可以一键下载全部
       productVal: undefined, // 国际定向检测产品下拉框选中值
-      productList: [ // 'viber', 'zalo', 'botim', 'line'
+      productList: [
         {
           value: '',
           label: '全部'
         },
         {
-          value: 'viber',
-          label: 'viber'
+          value: '1',
+          label: '一般场景黑名单'
         },
         {
-          value: 'zalo',
-          label: 'zalo'
+          value: '2',
+          label: '敏感场景黑名单'
         },
         {
-          value: 'botim',
-          label: 'botim'
-        },
-        {
-          value: 'line',
-          label: 'line'
+          value: '3',
+          label: '高危场景黑名单'
         }
       ], // 国际定向检测产品下拉框列表
       consumeTimer: [
@@ -680,22 +659,23 @@ export default {
           label: '全部'
         },
         {
-          value: 'viber',
-          label: 'viber'
+          value: '1',
+          label: '一般场景黑名单'
         },
         {
-          value: 'zalo',
-          label: 'zalo'
+          value: '2',
+          label: '敏感场景黑名单'
         },
         {
-          value: 'botim',
-          label: 'botim'
-        },
-        {
-          value: 'line',
-          label: 'line'
+          value: '3',
+          label: '高危场景黑名单'
         }
-      ]
+      ],
+      productTypeMap: {
+        1: '一般场景黑名单',
+        2: '敏感场景黑名单',
+        3: '高危场景黑名单'
+      }
     }
   },
   methods: {
@@ -1243,33 +1223,25 @@ export default {
     }
     .onecard {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
-      .balance-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .title {
-        font-size: 16px;
-        margin-top: -5px;
-      }
-      .count {
-        margin: 0;
-        font-size: 24px;
+      .left-block {
+        margin: 15px 0;
+        font-size: 12px;
         color: #595e7b;
-        font-weight: bold;
-        margin: 5px 0;
-      }
-      .des {
-        color: #878998;
-        .unit {
-          color: #649eff;
+        .count {
+          margin: 0;
+          font-size: 24px;
+          color: #595e7b;
+          margin-bottom: 10px;
+          font-weight: bold;
         }
-      }
-      .recharge-btn {
-        margin-top: 5px;
+        .des {
+          color: #878998;
+          .unit {
+            color: #649eff;
+          }
+        }
       }
     }
     .container {

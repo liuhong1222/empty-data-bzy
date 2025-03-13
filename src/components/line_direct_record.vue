@@ -6,7 +6,7 @@
           <div class="number-title">
             <div class="i-title">
               <img src="../assets/img/direct_record.png" />
-              <div class="title">line定向检测充值记录</div>
+              <div class="title">黑名单检测充值记录</div>
             </div>
           </div>
           <el-col class="addBtnBox">

@@ -83,13 +83,7 @@
                     >￥{{ item.specifications * 0.003 }}</del
                   >
                 </p>
-                <p v-if="type === '定向通用检测'" class="di">
-                  {{ item.remark }}
-                  <del style="display: block"
-                    >￥{{ item.specifications * 0.005 }}</del
-                  >
-                </p>
-                <p v-if="type === 'line定向检测'" class="di">
+                <p v-if="type === '黑名单检测'" class="di">
                   {{ item.remark }}
                   <del style="display: block"
                     >￥{{ item.specifications * 0.02 }}</del
@@ -461,9 +455,7 @@ export default {
             if (item.category === 1) this.goodlist.push(item)
           } else if (this.type === '国际号码检测') {
             if (item.category === 2) this.goodlist.push(item)
-          } else if (this.type === '定向通用检测') {
-            if (item.category === 4) this.goodlist.push(item)
-          } else if (this.type === 'line定向检测') {
+          } else if (this.type === '黑名单检测') {
             if (item.category === 5) this.goodlist.push(item)
           }
         } else if (item.type === 1) {
@@ -482,12 +474,7 @@ export default {
               this.zdy.id = item.id
               this.custom = item
             }
-          } else if (this.type === '定向通用检测') {
-            if (item.category === 4) {
-              this.zdy.id = item.id
-              this.custom = item
-            }
-          } else if (this.type === 'line定向检测') {
+          } else if (this.type === '黑名单检测') {
             if (item.category === 5) {
               this.zdy.id = item.id
               this.custom = item
@@ -558,10 +545,7 @@ export default {
         case '国际号码检测':
           this.$router.push('/international')
           break
-        case '定向通用检测':
-          this.$router.push('/direct')
-          break
-        case 'line定向检测':
+        case '黑名单检测':
           this.$router.push('/direct')
           break
         default:
@@ -597,7 +581,7 @@ export default {
                 : this.type === '2'
                 ? '国际号码检测'
                 : this.type === '4' || this.type === '5'
-                ? '国际定向检测'
+                ? '黑名单检测'
                 : ''
             }页面`
           )

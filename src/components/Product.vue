@@ -190,9 +190,9 @@
                   class="left-block-p"
                   @click="$router.push('/direct')"
                 >
-                  <div class="p-title">国际定向检测</div>
+                  <div class="p-title">黑名单检测</div>
                   <div class="des">
-                    用户上传TXT文件，平台提供对应的号码状态识别反馈，筛选出已激活和未注册的号码
+                    帮助降低营销过程中的投诉率，使终端用户免于骚扰
                   </div>
                 </div>
               </div>

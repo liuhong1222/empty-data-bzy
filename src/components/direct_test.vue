@@ -12,28 +12,10 @@
           <el-option
             v-for="item in typeList"
             :key="item.value"
-            :value="item.label"
+            :value="item.value"
             :label="item.label"
           >
             {{ item.label }}
-          </el-option>
-        </el-select>
-      </div>
-      <div>
-        <el-select
-          v-model="countryCodeValue"
-          :disabled="countryCodeDisabled"
-          placeholder="请选择国码（必选）"
-          class="country-code"
-        >
-          <el-option
-            v-for="item in countryCodeList"
-            :key="item.id"
-            :value="item.code"
-            :label="item.desc"
-          >
-            +{{ item.code }} - {{ item.name }} -
-            {{ item.desc }}
           </el-option>
         </el-select>
       </div>
@@ -212,25 +194,18 @@ export default {
       isUploadShow: false, // 分片上传弹窗
       uploadCompleted: '文件上传中，请勿离开...', // 分片上传进度
       checkId: '', // 文件检测id（唯一id）
-      countryCodeList: [], // 国码下拉框数据
-      countryCodeValue: undefined, // 选中的国码
-      countryCodeDisabled: false, // 检测时不可选择国码
       typeList: [ // 类型下拉框数据
         {
-          value: 'viber',
-          label: 'viber'
+          value: '1',
+          label: '一般场景黑名单'
         },
         {
-          value: 'zalo',
-          label: 'zalo'
+          value: '2',
+          label: '敏感场景黑名单'
         },
         {
-          value: 'botim',
-          label: 'botim'
-        },
-        {
-          value: 'line',
-          label: 'line'
+          value: '3',
+          label: '高危场景黑名单'
         }
       ],
       productType: undefined, // 选中的类型
@@ -272,16 +247,9 @@ export default {
     }
   },
   mounted() {
-    this.getCountryCode()
-    this.directBalance = this.personalInfo.directCommonBalance
+    this.directBalance = this.personalInfo.lineDirectBalance
   },
   methods: {
-    // 获取国码列表
-    async getCountryCode() {
-      const { data } = await this.$http.post('front/country/codeList')
-      if (data.code !== 200) return this.$message.error(data.msg)
-      this.countryCodeList = data.data
-    },
     // 是否展示文件上传可选按钮
     showFileBtn() {
       clearTimeout(this.fileBtnTimer)
@@ -304,12 +272,6 @@ export default {
       if (!this.productType) {
         event.preventDefault()
         this.$message.error('请先选择类型')
-        return
-      }
-
-      if (!this.countryCodeValue) {
-        event.preventDefault()
-        this.$message.error('请先选择国码')
         return
       }
 
@@ -361,11 +323,14 @@ export default {
         return
       }
       if (file) {
-        if (file.name.substr(-4) !== '.txt') {
-          this.$message.warning('仅支持txt文件')
+        if (
+          file.name.substr(-4) !== '.txt' &&
+          file.name.substr(-4) !== '.xls'
+        ) {
+          this.$message.warning('仅支持txt或者xls格式的文件')
           this.$refs.directSingleFile.value = ''
-        } else if (file.size >= 31457280) {
-          this.$message.warning('文件大小不能超过30M')
+        } else if (file.size >= 41943041) {
+          this.$message.warning('文件大小不能超过40M')
           this.$refs.directSingleFile.value = ''
         } else {
           this.fileObj = file || {}
@@ -407,7 +372,7 @@ export default {
         'fileId',
         this.checkId || ss.get('directTestingID')
       )
-      testForm.append('countryCode', this.countryCodeValue)
+      testForm.append('countryCode', '86')
       testForm.append('productType', this.productType)
       this.$http
         .post('/front/intDirect/checkByFile', testForm)
@@ -415,7 +380,6 @@ export default {
           if (res.data.code === 200) {
             this.dialogIndex = ''
             this.$message.success('文件检测成功，请查看检测记录表格')
-            this.countryCodeValue = ''
             this.productType = ''
             this.resetFrom()
             this.$emit('testSuccess', 'directPosition')
@@ -525,7 +489,7 @@ export default {
       if (value === 'line') {
         this.directBalance = this.personalInfo.lineDirectBalance
       } else {
-        this.directBalance = this.personalInfo.directCommonBalance
+        this.directBalance = this.personalInfo.lineDirectBalance
       }
       console.log(this.directBalance)
     }
